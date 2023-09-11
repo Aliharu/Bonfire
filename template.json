@@ -1,0 +1,80 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "base": {
+        "vitality": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "stress": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "biography": ""
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "level": {
+        "value": 1
+      },
+      "attributes": {
+        "str": {
+          "value": 0
+        },
+        "dex": {
+          "value": 0
+        },
+        "con": {
+          "value": 0
+        },
+        "int": {
+          "value": 0
+        },
+        "will": {
+          "value": 0
+        },
+        "pre": {
+          "value": 0
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "cr": 0
+    }
+  },
+  "Item": {
+    "types": ["item", "feature", "weapon"],
+    "templates": {
+      "base": {
+        "description": ""
+      },
+      "item": {
+        "quantity": 1,
+        "weight": 0,
+        "weightType": "small",
+        "cost": {
+          "source": 0,
+          "local": 0,
+          "nearby": 0,
+          "distant": 0
+        }
+      }
+    },
+    "item": {
+      "templates": ["base", "item"],
+      "formula": "d20bx + @str.mod + ceil(@lvl / 2)"
+    },
+    "weapon": {
+      "templates": ["base", "item"],
+      "damageFormula": "d12!",
+      "damageType": "piercing",
+      "recovery": 0,
+      "parry": 0
+    }
+  }
+}

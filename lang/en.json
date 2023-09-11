@@ -1,0 +1,22 @@
+{
+  "BONFIRE.AttributeStr": "Strength",
+  "BONFIRE.AttributeCon": "Constitution",
+  "BONFIRE.AttributeDex": "Dexterity",
+  "BONFIRE.AttributeInt": "Intelligence",
+  "BONFIRE.AttributeWill": "Willpower",
+  "BONFIRE.AttributePre": "Presence",
+
+  "BONFIRE.AttributeStrAbbr": "str",
+  "BONFIRE.AttributeConAbbr": "con",
+  "BONFIRE.AttributeDexAbbr": "dex",
+  "BONFIRE.AttributeIntAbbr": "int",
+  "BONFIRE.AttributeWillAbbr": "will",
+  "BONFIRE.AttributePreAbbr": "pre",
+
+  "BONFIRE.EffectCreate": "Create Effect",
+  "BONFIRE.EffectToggle": "Toggle Effect",
+  "BONFIRE.EffectEdit": "Edit Effect",
+  "BONFIRE.EffectDelete": "Delete Effect",
+
+  "BONFIRE.Add": "Add"
+}

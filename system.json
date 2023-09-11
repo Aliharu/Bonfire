@@ -1,0 +1,34 @@
+{
+  "id": "bonfire",
+  "title": "Bonfire",
+  "description": "The Bonfire system for FoundryVTT!",
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": 1,
+    "verified": 11,
+    "maximum": 11
+  },
+  "authors": [{
+    "name": "Aliharu"
+  }],
+  "esmodules": ["module/bonfire.mjs"],
+  "styles": ["css/bonfire.css"],
+  "scripts": [],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "gridDistance": 5,
+  "gridUnits": "ft",
+  "primaryTokenAttribute": "vitality",
+  "secondaryTokenAttribute": "stress",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE",
+  "changelog": "CHANGELOG.md"
+}
