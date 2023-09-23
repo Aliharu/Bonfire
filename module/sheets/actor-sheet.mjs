@@ -11,8 +11,8 @@ export class BonfireActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["bonfire", "sheet", "actor"],
       template: "systems/bonfire/templates/actor/actor-sheet.html",
-      width: 600,
-      height: 600,
+      width: 810,
+      height: 880,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
@@ -83,6 +83,8 @@ export class BonfireActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
+    const weapons = [];
+    const skills = [];
     const features = [];
     const spells = {
       0: [],
@@ -104,6 +106,12 @@ export class BonfireActorSheet extends ActorSheet {
       if (i.type === 'item') {
         gear.push(i);
       }
+      if (i.type === 'weapon') {
+        weapons.push(i);
+      }
+      if (i.type === 'skill') {
+        skills.push(i);
+      }
       // Append to spells.
       // else if (i.type === 'spell') {
       //   if (i.system.spellLevel != undefined) {
@@ -114,6 +122,8 @@ export class BonfireActorSheet extends ActorSheet {
 
     // Assign and return
     context.gear = gear;
+    context.weapons = weapons;
+    context.skills = skills;
   }
 
   /* -------------------------------------------- */
@@ -133,6 +143,12 @@ export class BonfireActorSheet extends ActorSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
+    html.find('.item-attack').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      if (item) return item.attack();
+    });
+
     // Add Inventory Item
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
@@ -149,6 +165,130 @@ export class BonfireActorSheet extends ActorSheet {
 
     // Rollable attribute.
     html.find('.rollable').click(this._onRoll.bind(this));
+
+    html.find('.item-attack-test').click(ev => {
+      // const weaponChart = await foundry.utils.fetchJsonWithTimeout('systems/exaltedthird/module/data/bonfire_weapons.json', {}, { int: 30000 });
+
+      // const weaponTotal = {};
+      // for(const weapon of weaponChart) {
+      //   let valTotal = 0;
+      //   for(let i = 0; i < 10000; i++) {z
+      //     var roll = new Roll(weapon.formula).evaluate({ async: false });
+      //     let rollTotal = roll.total / weapon.speed;
+      //     valTotal += rollTotal;
+      //   }
+      //   valTotal /= 10000;
+      //   console.log(`${weapon.name}:${valTotal}`);
+      //   weaponTotal[weapon.name] = valTotal;        
+      // }
+      // const weaponTotal = {};
+      // for(const dieRoll of [2,3,4,6,8,10,12,20]) {
+      //   let valTotal = 0;
+      //   for(let i = 0; i < 10000; i++) {
+      //     var roll = new Roll(`1d${dieRoll}x${dieRoll}`).evaluate({ async: false });
+      //     let rollTotal = roll.total;
+      //     valTotal += rollTotal;
+      //   }
+      //   valTotal /= 10000;
+      //   weaponTotal[dieRoll] = valTotal;    
+      // }
+      // console.log(
+      //   weaponTotal
+      // );
+
+      var pNoExplosion = 0;
+      var piercingTotal = 0;
+      var slashingTotal = 0;
+
+      for(let i = 0; i < 50; i++) {
+        var playerRoll = new Roll(`2d4+1d8+1`).evaluate({ async: false });
+        pNoExplosion += playerRoll.total;
+      }
+      for(let i = 0; i < 25; i++) {
+        var playerRoll = new Roll(`2d4bx+1d8bx+1`).evaluate({ async: false });
+        piercingTotal += playerRoll.total;
+      }
+
+      for(let i = 0; i < 16; i++) {
+        var playerRoll = new Roll(`3d3bx+2d4bx+1`).evaluate({ async: false });
+        slashingTotal += playerRoll.total;
+      }
+
+      console.log(`Slashing: ${slashingTotal}`);
+      console.log(`Piercing: ${piercingTotal}`);
+      console.log(`Piercing No Explosion: ${pNoExplosion}`);
+
+
+      // var playerSucceeded = 0;
+      // var playerPerfectAttacks = 0;
+      // for (let j = 0; j < 10000; j++) {
+      //   var explosionRoll = null;
+      //   var playerRoll = new Roll(`1d20`).evaluate({ async: false });
+      //   var playerTotal = playerRoll.total;
+      //   if (playerRoll.dice[0].results[0].result === 20) {
+      //     explosionRoll = new Roll(`1d6x6`).evaluate({ async: false });
+      //     playerTotal += explosionRoll.total;
+      //   }
+      //   var gmRoll = new Roll(`1d20`).evaluate({ async: false });
+      //   var gmTotal = gmRoll.total;
+      //   if (playerRoll.dice[0].results[0].result === 20) {
+      //     explosionRoll = new Roll(`1d6x6`).evaluate({ async: false });
+      //     gmTotal += explosionRoll.total;
+      //   }
+
+      //   if (gmTotal < playerTotal) {
+      //     playerSucceeded++;
+      //   }
+      //   if(playerTotal >= 20) {
+      //     playerPerfectAttacks++;
+      //   }
+      // }
+      // console.log(`Player succeeded ${(playerSucceeded / 10000) * 100}% of the time on an attack check, ${(playerPerfectAttacks / 10000) * 100}% perfect attacks`)
+
+
+      // var total1 = 0;
+      // var total2 = 0;
+      // for (let j = 0; j < 10000; j++) {
+      //   var explosionRoll = null;
+      //   var playerRoll = new Roll(`2d8x8`).evaluate({ async: false });
+      //   total1 += playerRoll.total;
+      //   var playerRoll2 = new Roll(`1d10x10 + 1d8x8`).evaluate({ async: false });
+      //   total2 += playerRoll2.total;
+      // }
+
+      // console.log(`Player succeeded ${(total1 / 10000)} normal attack average, ${(total2 / 10000)} Power attack average`)
+
+      // for (let i = 10; i <= 30; i += 5) {
+      //   var playerSucceeded = 0;
+      //   for (let j = 0; j < 10000; j++) {
+      //     var explosionRoll = null;
+      //     var playerRoll = new Roll(`1d20+20`).evaluate({ async: false });
+      //     var playerTotal = playerRoll.total;
+      //     if (playerRoll.dice[0].results[0].result) {
+      //       explosionRoll = new Roll(`1d6x6`).evaluate({ async: false });
+      //       playerTotal += explosionRoll.total;
+      //     }
+      //     var gmRoll = new Roll(`1d20+${i}`).evaluate({ async: false });
+      //     var gmTotal = gmRoll.total;
+      //     if (playerRoll.dice[0].results[0].result) {
+      //       explosionRoll = new Roll(`1d6x6`).evaluate({ async: false });
+      //       gmTotal += explosionRoll.total;
+      //     }
+
+      //     if (gmTotal <= playerTotal) {
+      //       playerSucceeded++;
+      //     }
+      //   }
+      //   const mapThing = {
+      //     10: 'Routine',
+      //     15: 'Easy',
+      //     20: 'Average',
+      //     25: 'Hard',
+      //     30: 'Challenging',
+      //   }
+      //   console.log(`Player succeeded ${(playerSucceeded / 10000) * 100}% of the time on a ${mapThing[i]} check`)
+      // }
+    });
 
     // Drag events for macros.
     if (this.actor.isOwner) {

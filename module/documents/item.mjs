@@ -16,9 +16,9 @@ export class BonfireItem extends Item {
    * Prepare a data object which is passed to any Roll formulas which are created related to this Item
    * @private
    */
-   getRollData() {
+  getRollData() {
     // If present, return the actor's roll data.
-    if ( !this.actor ) return null;
+    if (!this.actor) return null;
     const rollData = this.actor.getRollData();
     // Grab the item's system data as well.
     rollData.item = foundry.utils.deepClone(this.system);
@@ -64,5 +64,23 @@ export class BonfireItem extends Item {
       });
       return roll;
     }
+  }
+
+  async attack() {
+    const item = this;
+
+    // Initialize chat data.
+    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
+    const rollMode = game.settings.get('core', 'rollMode');
+    const label = `[${item.type}] ${item.name}`;
+
+    const rollData = this.getRollData();
+    const roll = new Roll(rollData.item.damageFormula, rollData);
+    roll.toMessage({
+      speaker: speaker,
+      rollMode: rollMode,
+      flavor: label,
+    });
+    return roll;
   }
 }

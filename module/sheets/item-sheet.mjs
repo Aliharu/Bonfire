@@ -59,5 +59,6 @@ export class BonfireItemSheet extends ItemSheet {
     if (!this.isEditable) return;
 
     // Roll handlers, click handlers, etc. would go here.
+    
   }
 }

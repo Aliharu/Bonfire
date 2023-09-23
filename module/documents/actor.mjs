@@ -51,7 +51,49 @@ export class BonfireActor extends Actor {
     // Loop through attribute scores, and add their modifiers to our sheet output.
     for (let [key, attribute] of Object.entries(systemData.attributes)) {
       // Calculate the modifier using d20 rules.
-      attribute.mod = Math.floor((attribute.value - 10) / 2);
+      if (attribute.value < 10) {
+        attribute.mod = Math.floor((attribute.value - 10) / 2);
+        if (attribute.value <= 2) {
+          attribute.mod--;
+        }
+      }
+      else if (attribute.value > 10) {
+        attribute.mod = Math.ceil((attribute.value - 10) / 2);
+        if (attribute.value === 17 || attribute.value >= 19) {
+          attribute.mod--;
+        }
+      }
+      else {
+        attribute.mod = 0;
+      }
+    }
+
+    // Loop through attribute scores, and add their modifiers to our sheet output.
+    for (let [key, skill] of Object.entries(systemData.skillSuites)) {
+      // Calculate the modifier using d20 rules.
+      switch (key) {
+        case "athletics":
+          skill.mod = Math.max(systemData.attributes.str.mod, systemData.attributes.con.mod);
+          break;
+        case "lore":
+          skill.mod = systemData.attributes.int.mod
+          break;
+        case "streetwise":
+          skill.mod = Math.max(systemData.attributes.will.mod, systemData.attributes.pre.mod);
+          break;
+        case "strategy":
+          skill.mod = Math.max(systemData.attributes.will.mod, systemData.attributes.pre.mod);
+          break;
+        case "survival":
+          skill.mod = Math.max(systemData.attributes.con.mod, systemData.attributes.will.mod);
+          break;
+        case "trades":
+          skill.mod = Math.max(systemData.attributes.dex.mod, systemData.attributes.int.mod);
+          break;
+        case "weirdcraft":
+          skill.mod = Math.max(systemData.attributes.int.mod, systemData.attributes.will.mod);
+          break;
+      }
     }
   }
 
@@ -89,6 +131,12 @@ export class BonfireActor extends Actor {
     // formulas like `@str.mod + 4`.
     if (data.attributes) {
       for (let [k, v] of Object.entries(data.attributes)) {
+        data[k] = foundry.utils.deepClone(v);
+      }
+    }
+
+    if (data.skillSuites) {
+      for (let [k, v] of Object.entries(data.skillSuites)) {
         data[k] = foundry.utils.deepClone(v);
       }
     }

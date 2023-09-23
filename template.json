@@ -1,6 +1,9 @@
 {
   "Actor": {
-    "types": ["character", "npc"],
+    "types": [
+      "character",
+      "npc"
+    ],
     "templates": {
       "base": {
         "vitality": {
@@ -13,11 +16,16 @@
           "min": 0,
           "max": 0
         },
+        "init": {
+          "value": 0
+        },
         "biography": ""
       }
     },
     "character": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "level": {
         "value": 1
       },
@@ -40,23 +48,122 @@
         "pre": {
           "value": 0
         }
+      },
+      "skillSuites": {
+        "athletics": {
+          "label": "Athletics",
+          "value": 0
+        },
+        "lore": {
+          "label": "Lore",
+          "value": 0
+        },
+        "streetwise": {
+          "label": "Streetwise",
+          "value": 0
+        },
+        "strategy": {
+          "label": "Strategy",
+          "value": 0
+        },
+        "survival": {
+          "label": "Survival",
+          "value": 0
+        },
+        "trades": {
+          "label": "Trades",
+          "value": 0
+        },
+        "weirdcraft": {
+          "label": "Weirdcraft",
+          "value": 0
+        }
+      },
+      "integrity": {
+        "value": 0
+      },
+      "gritDice": {
+        "value": 0
+      },
+      "armor": {
+        "name": "",
+        "dr": 0,
+        "drDice": 0,
+        "bonus": "",
+        "skillAdjustment": {
+          "value": 0,
+          "reduction": 0,
+          "total": 0
+        },
+        "penalties": {
+          "defense": {
+            "base": 0,
+            "skill": 0,
+            "total": 0
+          },
+          "fatigue": {
+            "base": 0,
+            "skill": 0,
+            "total": 0
+          },
+          "recovery": {
+            "base": 0,
+            "skill": 0,
+            "total": 0
+          },
+          "initiative": {
+            "base": 0,
+            "skill": 0,
+            "total": 0
+          }
+        }
+      },
+      "shield": {
+        "name": "",
+        "dr": 0,
+        "drDice": 0,
+        "defensePenalty": 0,
+        "size": "small",
+        "cover": 0,
+        "fatigue": {
+          "base": 0,
+          "skill": 0,
+          "total": 0
+        },
+        "parry": {
+          "base": 0,
+          "skill": 0,
+          "total": 0
+        },
+        "break": {
+          "base": 0,
+          "skill": 0,
+          "total": 0
+        },
+        "bonus": ""
       }
     },
     "npc": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "cr": 0
     }
   },
   "Item": {
-    "types": ["item", "feature", "weapon"],
+    "types": [
+      "item",
+      "skill",
+      "feature",
+      "weapon"
+    ],
     "templates": {
       "base": {
         "description": ""
       },
       "item": {
         "quantity": 1,
-        "weight": 0,
-        "weightType": "small",
+        "weight": "none",
         "cost": {
           "source": 0,
           "local": 0,
@@ -66,12 +173,27 @@
       }
     },
     "item": {
-      "templates": ["base", "item"],
-      "formula": "d20bx + @str.mod + ceil(@lvl / 2)"
+      "templates": [
+        "base",
+        "item"
+      ],
+      "formula": "d20bx"
+    },
+    "skill": {
+      "templates": [
+        "base"
+      ],
+      "formula": "d20bx",
+      "ranks": 0,
+      "mod": 0
     },
     "weapon": {
-      "templates": ["base", "item"],
-      "damageFormula": "d12!",
+      "templates": [
+        "base",
+        "item"
+      ],
+      "formula": "1d20bx",
+      "damageFormula": "1d12bx",
       "damageType": "piercing",
       "recovery": 0,
       "parry": 0
