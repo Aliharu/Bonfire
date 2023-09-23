@@ -27,7 +27,7 @@
   "primaryTokenAttribute": "vitality",
   "secondaryTokenAttribute": "stress",
   "url": "https://raw.githubusercontent.com/Aliharu/bonfire",
-  "manifest": "https://raw.githubusercontent.com/Aliharu/bonfire/master/system.json",
+  "manifest": "https://raw.githubusercontent.com/Aliharu/bonfire/main/system.json",
   "download": "https://github.com/Aliharu/bonfire/releases/download/v0.0.1/release0.0.1.zip",
   "license": "LICENSE",
   "changelog": "CHANGELOG.md"
