@@ -196,27 +196,23 @@ export class BonfireActorSheet extends ActorSheet {
       //   weaponTotal
       // );
 
-      var pNoExplosion = 0;
-      var piercingTotal = 0;
-      var slashingTotal = 0;
+      var mail = 0;
+      var flail = 0;
 
-      for(let i = 0; i < 50; i++) {
-        var playerRoll = new Roll(`2d4+1d8+1`).evaluate({ async: false });
-        pNoExplosion += playerRoll.total;
+      for(let i = 0; i < 10; i++) {
+        var playerRoll = new Roll(`1d20`).evaluate({ async: false });
+        mail += playerRoll.total;
       }
-      for(let i = 0; i < 25; i++) {
-        var playerRoll = new Roll(`2d4bx+1d8bx+1`).evaluate({ async: false });
-        piercingTotal += playerRoll.total;
-      }
-
-      for(let i = 0; i < 16; i++) {
-        var playerRoll = new Roll(`3d3bx+2d4bx+1`).evaluate({ async: false });
-        slashingTotal += playerRoll.total;
+      for(let i = 0; i < 7; i++) {
+        var playerRoll = new Roll(`2d12`).evaluate({ async: false });
+        flail += playerRoll.total;
       }
 
-      console.log(`Slashing: ${slashingTotal}`);
-      console.log(`Piercing: ${piercingTotal}`);
-      console.log(`Piercing No Explosion: ${pNoExplosion}`);
+      // Flail: 36
+      // Maul: 57
+
+      console.log(`Flail: ${flail}`);
+      console.log(`Maul: ${mail}`);
 
 
       // var playerSucceeded = 0;
