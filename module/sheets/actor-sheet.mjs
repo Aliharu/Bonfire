@@ -1,4 +1,4 @@
-import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/effects.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -71,6 +71,55 @@ export class BonfireActorSheet extends ActorSheet {
     for (let [k, v] of Object.entries(context.system.attributes)) {
       v.label = game.i18n.localize(CONFIG.BONFIRE.attributes[k]) ?? k;
     }
+
+    if(context.system.integrity.value <= 5) {
+      context.system.gritDice.dice = `N/A`;
+    }
+    else {
+      var gridDiceVal = 4;
+      if(context.system.integrity.value > 10){ 
+        gridDiceVal = 6;
+      }
+      if(context.system.integrity.value > 15){ 
+        gridDiceVal = 8;
+      }
+      if(context.system.integrity.value > 20){ 
+        gridDiceVal = 10;
+      }
+      if(context.system.race.toLowerCase() === 'human'){ 
+        gridDiceVal += 2;
+      }
+      context.system.gritDice.dice = `D${gridDiceVal}`;
+    }
+
+    context.system.vitality.value = context.system.vitality.max - context.system.vitality.damage;
+    context.system.stress.value = context.system.stress.max - context.system.stress.damage;
+
+    if(context.system.vitality.damage > 0) {
+      context.system.vitality.status = 'Hurt';
+    }
+    if(context.system.vitality.damage > Math.ceil(context.system.vitality.max / 4)) {
+      context.system.vitality.status = 'Bloodied';
+    }
+    if(context.system.vitality.damage > Math.floor((context.system.vitality.max / 4) * 2)) {
+      context.system.vitality.status = 'Wounded';
+    }
+    if(context.system.vitality.damage > Math.floor((context.system.vitality.max / 4) * 3)) {
+      context.system.vitality.status = 'Critical';
+    }
+
+    if(context.system.stress.damage > 0) {
+      context.system.stress.status = 'Unsure';
+    }
+    if(context.system.stress.damage > Math.ceil(context.system.stress.max / 4)) {
+      context.system.stress.status = 'Nervous';
+    }
+    if(context.system.stress.damage > Math.floor((context.system.stress.max / 4) * 2)) {
+      context.system.stress.status = 'Shaken';
+    }
+    if(context.system.stress.damage > Math.floor((context.system.stress.max / 4) * 3)) {
+      context.system.stress.status = 'Breaking';
+    }
   }
 
   /**
@@ -86,17 +135,13 @@ export class BonfireActorSheet extends ActorSheet {
     const weapons = [];
     const skills = [];
     const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
+    const flaws = [];
+    const characteristics = {
+      devotions: [],
+      descriptions: [],
+      convictions: [],
+      reputations: [],
+      contacts: [],
     };
 
     // Iterate through items, allocating to containers
@@ -112,18 +157,36 @@ export class BonfireActorSheet extends ActorSheet {
       if (i.type === 'skill') {
         skills.push(i);
       }
-      // Append to spells.
-      // else if (i.type === 'spell') {
-      //   if (i.system.spellLevel != undefined) {
-      //     spells[i.system.spellLevel].push(i);
-      //   }
-      // }
+      if (i.type === 'flaw') {
+        flaws.push(i);
+      }
+      if (i.type === 'characteristic') {
+        switch (i.system.type) {
+          case 'devotion':
+            characteristics['devotions'].push(i);
+            break;
+          case 'description':
+            characteristics['descriptions'].push(i);
+            break;
+          case 'conviction':
+            characteristics['convictions'].push(i);
+            break;
+          case 'contact':
+            characteristics['contacts'].push(i);
+            break;
+          case 'reputation':
+            characteristics['reputations'].push(i);
+            break;
+        }
+      }
     }
 
     // Assign and return
     context.gear = gear;
     context.weapons = weapons;
+    context.characteristics = characteristics;
     context.skills = skills;
+    context.flaws = flaws;
   }
 
   /* -------------------------------------------- */
@@ -199,11 +262,11 @@ export class BonfireActorSheet extends ActorSheet {
       var mail = 0;
       var flail = 0;
 
-      for(let i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i++) {
         var playerRoll = new Roll(`1d20`).evaluate({ async: false });
         mail += playerRoll.total;
       }
-      for(let i = 0; i < 7; i++) {
+      for (let i = 0; i < 7; i++) {
         var playerRoll = new Roll(`2d12`).evaluate({ async: false });
         flail += playerRoll.total;
       }
@@ -321,7 +384,7 @@ export class BonfireActorSheet extends ActorSheet {
     delete itemData.system["type"];
 
     // Finally, create the item!
-    return await Item.create(itemData, {parent: this.actor});
+    return await Item.create(itemData, { parent: this.actor });
   }
 
   /**
@@ -346,7 +409,16 @@ export class BonfireActorSheet extends ActorSheet {
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[attribute] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      let rollString = dataset.roll;
+      if(dataset.type === 'skill') {
+        if(this.actor.system.skillSuites[dataset.skill].trained) {
+          rollString = `d20bx+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
+        }
+        else {
+          rollString = `d12bx+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
+        }
+      }
+      let roll = new Roll(rollString, this.actor.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,

@@ -7,16 +7,34 @@
     "templates": {
       "base": {
         "vitality": {
-          "value": 0,
+          "damage": 0,
           "min": 0,
           "max": 0
         },
         "stress": {
-          "value": 0,
+          "damage": 0,
           "min": 0,
           "max": 0
         },
         "init": {
+          "value": 0
+        },
+        "defense": {
+          "value": 0
+        },
+        "dr": {
+          "value": 0
+        },
+        "diceDr": {
+          "value": 0
+        },
+        "parry": {
+          "value": 0
+        },
+        "recovery": {
+          "value": 0
+        },
+        "traumaThreshhold": {
           "value": 0
         },
         "biography": ""
@@ -27,7 +45,13 @@
         "base"
       ],
       "level": {
-        "value": 1
+        "value": 1,
+        "primary": 1,
+        "secondary": 1
+      },
+      "archtype": {
+        "primary": 1,
+        "secondary": 1
       },
       "attributes": {
         "str": {
@@ -51,31 +75,60 @@
       },
       "skillSuites": {
         "athletics": {
+          "trained": false,
           "label": "Athletics",
           "value": 0
         },
         "lore": {
+          "trained": false,
           "label": "Lore",
           "value": 0
         },
         "streetwise": {
+          "trained": false,
           "label": "Streetwise",
           "value": 0
         },
         "strategy": {
+          "trained": false,
           "label": "Strategy",
           "value": 0
         },
         "survival": {
+          "trained": false,
           "label": "Survival",
           "value": 0
         },
         "trades": {
+          "trained": false,
           "label": "Trades",
           "value": 0
         },
         "weirdcraft": {
+          "trained": false,
           "label": "Weirdcraft",
+          "value": 0
+        }
+      },
+      "combatSkills": {
+        "melee": {
+          "trained": false,
+          "label": "Melee",
+          "value": 0
+        },
+        "ranged": {
+          "trained": false,
+          "label": "Ranged",
+          "value": 0
+        },
+        "armor": {
+          "trained": false,
+          "label": "Armor",
+          "value": 0
+        },
+        "shield": {
+          "trained": false,
+          "label": "Shield",
           "value": 0
         }
       },
@@ -83,8 +136,22 @@
         "value": 0
       },
       "gritDice": {
+        "value": 0,
+        "dice": "N/A"
+      },
+      "favor": {
+        "value": 0,
+        "max": 0
+      },
+      "contactPoints": {
         "value": 0
       },
+      "goals": "",
+      "crp": {
+        "unspent": 0,
+        "spent": 0
+      },
+      "race": "",
       "armor": {
         "name": "",
         "dr": 0,
@@ -141,6 +208,12 @@
           "total": 0
         },
         "bonus": ""
+      },
+      "money": {
+        "copper": 0,
+        "silver": 0,
+        "gold": 0,
+        "platinum": 0
       }
     },
     "npc": {
@@ -155,7 +228,10 @@
       "item",
       "skill",
       "feature",
-      "weapon"
+      "weapon",
+      "characteristic",
+      "flaw",
+      "contact"
     ],
     "templates": {
       "base": {
@@ -186,6 +262,20 @@
       "formula": "d20bx",
       "ranks": 0,
       "mod": 0
+    },
+    "characteristic": {
+      "templates": [
+        "base"
+      ],
+      "type": "description",
+      "value": 0
+    },
+    "flaw": {
+      "templates": [
+        "base"
+      ],
+      "crp": 0,
+      "rank": 0
     },
     "weapon": {
       "templates": [

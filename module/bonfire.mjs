@@ -8,6 +8,7 @@ import { BonfireItemSheet } from "./sheets/item-sheet.mjs";
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { BONFIRE } from "./helpers/config.mjs";
 import { BonfireDie } from "./dice/dice.mjs";
+import { BonfireCombat } from "./combat.js";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -31,13 +32,14 @@ Hooks.once('init', async function() {
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: "1d4bx+@init.value",
+    formula: "1d4+@init.value",
     decimals: 2
   };
 
   // Define custom Document classes
   CONFIG.Actor.documentClass = BonfireActor;
   CONFIG.Item.documentClass = BonfireItem;
+  CONFIG.Combat.documentClass = BonfireCombat;
 
   CONFIG.Dice.terms.d = BonfireDie;
   const diceTypesIdx = CONFIG.Dice.types.findIndex((x) => x.DENOMINATION === 'd');
