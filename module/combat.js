@@ -12,7 +12,7 @@ export class BonfireCombat extends Combat {
             callback: () => ({ die: document.getElementById('rollFormula').value }),
           },
           start: {
-            label: 'Initiative',
+            label: 'Immediate',
             callback: () => ({ die: false }),
           },
         },

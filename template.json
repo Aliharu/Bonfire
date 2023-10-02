@@ -37,6 +37,13 @@
         "traumaThreshhold": {
           "value": 0
         },
+        "speed": {
+          "crawl": 2.5,
+          "walk": 5,
+          "jog": 10,
+          "run": 15,
+          "sprint": 20
+        },
         "biography": ""
       }
     },
@@ -220,7 +227,9 @@
       "templates": [
         "base"
       ],
-      "cr": 0
+      "caution": {
+        "value": 0
+      }
     }
   },
   "Item": {

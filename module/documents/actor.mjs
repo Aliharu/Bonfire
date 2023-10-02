@@ -35,8 +35,15 @@ export class BonfireActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
+    this._prepareActorData(actorData);
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
+  }
+
+  _prepareActorData(actorData) {
+    const systemData = actorData.system;
+    systemData.vitality.value = systemData.vitality.max - systemData.vitality.damage;
+    systemData.stress.value = systemData.stress.max - systemData.stress.damage;
   }
 
   /**
@@ -65,6 +72,52 @@ export class BonfireActor extends Actor {
       }
       else {
         attribute.mod = 0;
+      }
+
+      if(systemData.integrity.value <= 5) {
+        systemData.gritDice.dice = `N/A`;
+      }
+      else {
+        var gridDiceVal = 4;
+        if(systemData.integrity.value > 10){ 
+          gridDiceVal = 6;
+        }
+        if(systemData.integrity.value > 15){ 
+          gridDiceVal = 8;
+        }
+        if(systemData.integrity.value > 20){ 
+          gridDiceVal = 10;
+        }
+        if(systemData.race.toLowerCase() === 'human'){ 
+          gridDiceVal += 2;
+        }
+        systemData.gritDice.dice = `D${gridDiceVal}`;
+      }
+  
+      if(systemData.vitality.damage > 0) {
+        systemData.vitality.status = 'Hurt';
+      }
+      if(systemData.vitality.damage > Math.ceil(systemData.vitality.max / 4)) {
+        systemData.vitality.status = 'Bloodied';
+      }
+      if(systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 2)) {
+        systemData.vitality.status = 'Wounded';
+      }
+      if(systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 3)) {
+        systemData.vitality.status = 'Critical';
+      }
+  
+      if(systemData.stress.damage > 0) {
+        systemData.stress.status = 'Unsure';
+      }
+      if(systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
+        systemData.stress.status = 'Nervous';
+      }
+      if(systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
+        systemData.stress.status = 'Shaken';
+      }
+      if(systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 3)) {
+        systemData.stress.status = 'Breaking';
       }
     }
 

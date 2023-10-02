@@ -71,55 +71,6 @@ export class BonfireActorSheet extends ActorSheet {
     for (let [k, v] of Object.entries(context.system.attributes)) {
       v.label = game.i18n.localize(CONFIG.BONFIRE.attributes[k]) ?? k;
     }
-
-    if(context.system.integrity.value <= 5) {
-      context.system.gritDice.dice = `N/A`;
-    }
-    else {
-      var gridDiceVal = 4;
-      if(context.system.integrity.value > 10){ 
-        gridDiceVal = 6;
-      }
-      if(context.system.integrity.value > 15){ 
-        gridDiceVal = 8;
-      }
-      if(context.system.integrity.value > 20){ 
-        gridDiceVal = 10;
-      }
-      if(context.system.race.toLowerCase() === 'human'){ 
-        gridDiceVal += 2;
-      }
-      context.system.gritDice.dice = `D${gridDiceVal}`;
-    }
-
-    context.system.vitality.value = context.system.vitality.max - context.system.vitality.damage;
-    context.system.stress.value = context.system.stress.max - context.system.stress.damage;
-
-    if(context.system.vitality.damage > 0) {
-      context.system.vitality.status = 'Hurt';
-    }
-    if(context.system.vitality.damage > Math.ceil(context.system.vitality.max / 4)) {
-      context.system.vitality.status = 'Bloodied';
-    }
-    if(context.system.vitality.damage > Math.floor((context.system.vitality.max / 4) * 2)) {
-      context.system.vitality.status = 'Wounded';
-    }
-    if(context.system.vitality.damage > Math.floor((context.system.vitality.max / 4) * 3)) {
-      context.system.vitality.status = 'Critical';
-    }
-
-    if(context.system.stress.damage > 0) {
-      context.system.stress.status = 'Unsure';
-    }
-    if(context.system.stress.damage > Math.ceil(context.system.stress.max / 4)) {
-      context.system.stress.status = 'Nervous';
-    }
-    if(context.system.stress.damage > Math.floor((context.system.stress.max / 4) * 2)) {
-      context.system.stress.status = 'Shaken';
-    }
-    if(context.system.stress.damage > Math.floor((context.system.stress.max / 4) * 3)) {
-      context.system.stress.status = 'Breaking';
-    }
   }
 
   /**

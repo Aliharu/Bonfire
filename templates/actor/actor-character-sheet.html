@@ -14,7 +14,8 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center">
-          <label for="system.vitality.damage" class="resource-label">Vitality {{#if system.vitality.status}}({{system.vitality.status}}){{/if}}</label>
+          <label for="system.vitality.damage" class="resource-label">Vitality {{#if
+            system.vitality.status}}({{system.vitality.status}}){{/if}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.vitality.damage" value="{{system.vitality.damage}}" data-dtype="Number" />
             <span> / </span>
@@ -23,7 +24,8 @@
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.stress.value" class="resource-label">Stress {{#if system.stress.status}}({{system.stress.status}}){{/if}}</label>
+          <label for="system.stress.value" class="resource-label">Stress {{#if
+            system.stress.status}}({{system.stress.status}}){{/if}}</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.stress.damage" value="{{system.stress.damage}}" data-dtype="Number" />
             <span> / </span>
@@ -187,8 +189,7 @@
                 data-label="{{skill.label}}">{{skill.label}}</label>
             </div>
             <div class="item-formula item-prop">
-              <input type="text" name="system.combatSkills.{{key}}.value" value="{{skill.value}}"
-                data-dtype="Number" />
+              <input type="text" name="system.combatSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" />
             </div>
           </div>
           {{/each}}
@@ -221,9 +222,32 @@
             </div>
             <div class="flex-group-center">
               <div class="resource-label">Trauma</div>
-              <input type="text" name="system.traumaThreshhold.value" value="{{system.traumaThreshhold.value}}" data-dtype="Number" />
+              <input type="text" name="system.traumaThreshhold.value" value="{{system.traumaThreshhold.value}}"
+                data-dtype="Number" />
             </div>
           </div>
+        </div>
+      </div>
+      <div class="grid grid-5col">
+        <div class="flex-group-center">
+          <div class="resource-label">Crawl</div>
+          <input type="text" name="system.speed.crawl" value="{{system.speed.crawl}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Walk</div>
+          <input type="text" name="system.speed.walk" value="{{system.speed.walk}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Jog</div>
+          <input type="text" name="system.speed.jog" value="{{system.speed.jog}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Run</div>
+          <input type="text" name="system.speed.run" value="{{system.speed.run}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Sprint</div>
+          <input type="text" name="system.speed.sprint" value="{{system.speed.sprint}}" data-dtype="Number" />
         </div>
       </div>
       <div class="grid grid-2col">
@@ -359,40 +383,42 @@
             <div class="resource-label">Bonus</div>
             <input type="text" name="system.shield.bonus" value="{{system.shield.bonus}}" />
           </div>
-        </div>
       </div>
+    </div>
     </div>
 
     {{!-- Biography Tab --}}
     <div class="tab characteristics" data-group="primary" data-tab="characteristics">
       <div class="grid grid-2col">
         <div class="grid grid-5col">
-            <div class="flex-group-center">
-              <div class="resource-label">Integrity</div>
-              <input type="text" name="system.integrity.value" value="{{system.integrity.value}}" data-dtype="Number" />
+          <div class="flex-group-center">
+            <div class="resource-label">Integrity</div>
+            <input type="text" name="system.integrity.value" value="{{system.integrity.value}}" data-dtype="Number" />
+          </div>
+          <div class="flex-group-center">
+            <div class="resource-label rollable" data-roll="{{ system.gritDice.dice }}bx" data-type="grit"
+              data-label="Grit">Grit Dice ({{ system.gritDice.dice }})</div>
+            <input type="text" name="system.gritDice.value" value="{{system.gritDice.value}}" data-dtype="Number" />
+          </div>
+          <div class="resource flex-group-center">
+            <div class="resource-label">Favor</div>
+            <div class="resource-content flexrow flex-center flex-between">
+              <input type="text" name="system.favor.value" value="{{system.favor.value}}" data-dtype="Number" />
+              <span> / </span>
+              <input type="text" name="system.favor.max" value="{{system.favor.max}}" data-dtype="Number" />
             </div>
-            <div class="flex-group-center">
-              <div class="resource-label rollable" data-roll="{{ system.gritDice.dice }}bx" data-type="grit" data-label="Grit">Grit Dice ({{ system.gritDice.dice }})</div>
-              <input type="text" name="system.gritDice.value" value="{{system.gritDice.value}}" data-dtype="Number" />
-            </div>
-            <div class="resource flex-group-center">
-              <div class="resource-label">Favor</div>
-              <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="system.favor.value" value="{{system.favor.value}}" data-dtype="Number" />
-                <span> / </span>
-                <input type="text" name="system.favor.max" value="{{system.favor.max}}" data-dtype="Number" />
-              </div>
-            </div>
-            <div class="flex-group-center">
-              <div class="resource-label">Contact Points</div>
-              <input type="text" name="system.contactPoints.value" value="{{system.contactPoints.value}}" data-dtype="Number" />
-            </div>
+          </div>
+          <div class="flex-group-center">
+            <div class="resource-label">Contact Points</div>
+            <input type="text" name="system.contactPoints.value" value="{{system.contactPoints.value}}"
+              data-dtype="Number" />
+          </div>
         </div>
 
       </div>
       <div>
         <div class="resource-label">Goals</div>
-        <input type="text" name="system.goals" value="{{system.goals}}"/>
+        <input type="text" name="system.goals" value="{{system.goals}}" />
       </div>
       <ol class="items-list">
         <li class="item flexrow items-header">
@@ -404,6 +430,7 @@
           </div>
         </li>
         {{#each characteristics as |characteristicList type|}}
+        {{#if characteristicList}}
         <div class="item d-flex flex-between mb-1 resource" style="text-align: center;text-transform: capitalize;">
           <div class="resource-label">{{type}}</div>
         </div>
@@ -423,6 +450,7 @@
           </div>
         </li>
         {{/each}}
+        {{/if}}
         {{/each}}
       </ol>
       <ol class="items-list">
