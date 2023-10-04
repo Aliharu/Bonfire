@@ -8,6 +8,10 @@
           <label class="resource-label">Quantity</label>
           <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
         </div>
+        <div class="resource">
+          <label class="resource-label">Quality</label>
+          <input type="text" name="system.quality" value="{{system.quality}}" data-dtype="Number"/>
+        </div>
       </div>
     </div>
   </header>
@@ -33,6 +37,28 @@
       <div class="resource">
         <label class="resource-label">Roll Formula</label>
         <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+      </div>
+      <div class="resource grid grid-4col">
+        <div class="resource">
+          <label class="resource-label">Source</label>
+          <input type="text" name="system.cost.source" value="{{system.cost.source}}" data-dtype="Number"/>
+          {{ system.fullCost.source }}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Local</label>
+          <input type="text" name="system.cost.local" value="{{system.cost.local}}" data-dtype="Number"/>
+          {{ system.fullCost.local }}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Nearby</label>
+          <input type="text" name="system.cost.nearby" value="{{system.cost.nearby}}" data-dtype="Number"/>
+          {{ system.fullCost.nearby }}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Distant</label>
+          <input type="text" name="system.cost.distant" value="{{system.cost.distant}}" data-dtype="Number"/>
+          {{ system.fullCost.distant }}
+        </div>
       </div>
     </div>
   </section>

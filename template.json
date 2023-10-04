@@ -34,6 +34,9 @@
         "recovery": {
           "value": 0
         },
+        "measure": {
+          "value": 0
+        },
         "traumaThreshhold": {
           "value": 0
         },
@@ -136,6 +139,11 @@
         "shield": {
           "trained": false,
           "label": "Shield",
+          "value": 0
+        },
+        "unarmed": {
+          "trained": false,
+          "label": "Unarmed",
           "value": 0
         }
       },
@@ -248,6 +256,7 @@
       },
       "item": {
         "quantity": 1,
+        "quality": 0,
         "weight": "none",
         "cost": {
           "source": 0,

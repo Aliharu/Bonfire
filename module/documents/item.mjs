@@ -10,6 +10,31 @@ export class BonfireItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+
+  }
+
+  prepareDerivedData() {
+    const actorData = this;
+    const systemData = actorData.system;
+
+    if(actorData.type === 'item') {
+      systemData.fullCost = {
+        source: systemData.cost.source,
+        local: systemData.cost.local,
+        nearby: systemData.cost.nearby,
+        distant: systemData.cost.distant,
+      }
+      for(var i = 0; i < systemData.quality; i++) {
+        systemData.fullCost.source = systemData.fullCost.source * 1.25;
+        systemData.fullCost.local = systemData.fullCost.local * 1.25;
+        systemData.fullCost.nearby = systemData.fullCost.nearby * 1.25;
+        systemData.fullCost.distant = systemData.fullCost.distant * 1.25;
+      }
+      systemData.fullCost.source = systemData.fullCost.source.toFixed(2);
+      systemData.fullCost.local = systemData.fullCost.local.toFixed(2);
+      systemData.fullCost.nearby = systemData.fullCost.nearby.toFixed(2);
+      systemData.fullCost.distant = systemData.fullCost.distant.toFixed(2);
+    }
   }
 
   /**
