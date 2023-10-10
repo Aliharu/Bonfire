@@ -126,28 +126,45 @@ export class BonfireActor extends Actor {
       // Calculate the modifier using d20 rules.
       switch (key) {
         case "athletics":
-          skill.mod = Math.max(systemData.attributes.str.mod, systemData.attributes.con.mod);
+          skill.mod = Math.min(systemData.attributes.str.mod, systemData.attributes.con.mod);
           break;
         case "lore":
           skill.mod = systemData.attributes.int.mod
           break;
         case "streetwise":
-          skill.mod = Math.max(systemData.attributes.will.mod, systemData.attributes.pre.mod);
+          skill.mod = Math.min(systemData.attributes.will.mod, systemData.attributes.pre.mod);
           break;
         case "strategy":
-          skill.mod = Math.max(systemData.attributes.will.mod, systemData.attributes.pre.mod);
+          skill.mod = Math.min(systemData.attributes.will.mod, systemData.attributes.pre.mod);
           break;
         case "survival":
-          skill.mod = Math.max(systemData.attributes.con.mod, systemData.attributes.will.mod);
+          skill.mod = Math.min(systemData.attributes.con.mod, systemData.attributes.will.mod);
           break;
         case "trades":
-          skill.mod = Math.max(systemData.attributes.dex.mod, systemData.attributes.int.mod);
+          skill.mod = Math.min(systemData.attributes.dex.mod, systemData.attributes.int.mod);
           break;
         case "weirdcraft":
-          skill.mod = Math.max(systemData.attributes.int.mod, systemData.attributes.will.mod);
+          skill.mod = Math.min(systemData.attributes.int.mod, systemData.attributes.will.mod);
           break;
       }
     }
+
+    var combatStatMods = {}
+
+    combatStatMods.attack = CONFIG.BONFIRE.combatStatMods.dexAtk[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.intAtk[systemData.attributes.int.value];
+    combatStatMods.defense = CONFIG.BONFIRE.combatStatMods.dexDef[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willDef[systemData.attributes.will.value];
+    combatStatMods.initiative = CONFIG.BONFIRE.combatStatMods.dexInit[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willInit[systemData.attributes.will.value];
+    combatStatMods.damage = CONFIG.BONFIRE.combatStatMods.strDam[systemData.attributes.str.value];
+    combatStatMods.recovery = CONFIG.BONFIRE.combatStatMods.strRec[systemData.attributes.str.value];
+
+    systemData.combatStatMods = combatStatMods;
+    var totalCRPRequired = 0;
+
+    for(var i = 0; i < systemData.level.value; i++) {
+      totalCRPRequired += 50 + (3 * (i + 1));
+    }
+
+    systemData.crp.toLevel = totalCRPRequired - systemData.crp.spent;
   }
 
   /**

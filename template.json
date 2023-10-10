@@ -37,6 +37,9 @@
         "measure": {
           "value": 0
         },
+        "flanks": {
+          "value": 0
+        },
         "traumaThreshhold": {
           "value": 0
         },
@@ -120,31 +123,148 @@
           "value": 0
         }
       },
+      "martialAdepts": 0,
+      "skillAdepts": 0,
       "combatSkills": {
         "melee": {
           "trained": false,
           "label": "Melee",
-          "value": 0
+          "value": 0,
+          "advancedCombatSkills": {
+            "attack": {
+              "label": "Attack",
+              "value": 0,
+              "baseCost": 7
+            },
+            "damage": {
+              "label": "Damage",
+              "value": 0,
+              "baseCost": 7
+            },
+            "recovery": {
+              "label": "Recovery",
+              "value": 0,
+              "baseCost": 7
+            },
+            "parry": {
+              "label": "Parry",
+              "value": 0,
+              "baseCost": 7
+            }
+          }
         },
         "ranged": {
           "trained": false,
           "label": "Ranged",
-          "value": 0
+          "value": 0,
+          "advancedCombatSkills": {
+            "attack": {
+              "label": "Attack",
+              "value": 0,
+              "baseCost": 7
+            },
+            "damage": {
+              "label": "Damage",
+              "value": 0,
+              "baseCost": 7
+            },
+            "recovery": {
+              "label": "Recovery",
+              "value": 0,
+              "baseCost": 7
+            }
+          }
         },
         "armor": {
           "trained": false,
           "label": "Armor",
-          "value": 0
+          "value": 0,
+          "advancedCombatSkills": {
+            "defense": {
+              "label": "Defense",
+              "value": 0,
+              "baseCost": 7
+            },
+            "fatigue": {
+              "label": "Fatigue",
+              "value": 0,
+              "baseCost": 7
+            },
+            "recovery": {
+              "label": "Recovery",
+              "value": 0,
+              "baseCost": 7
+            },
+            "initiative": {
+              "label": "Initiative",
+              "value": 0,
+              "baseCost": 7
+            }
+          }
         },
         "shield": {
           "trained": false,
           "label": "Shield",
-          "value": 0
+          "value": 0,
+          "advancedCombatSkills": {
+            "breakage": {
+              "label": "Breakage",
+              "value": 0,
+              "baseCost": 3
+            },
+            "fatigue": {
+              "label": "Fatigue",
+              "value": 0,
+              "baseCost": 7
+            },
+            "parry": {
+              "label": "Parry",
+              "value": 0,
+              "baseCost": 7
+            }
+          }
         },
         "unarmed": {
           "trained": false,
           "label": "Unarmed",
-          "value": 0
+          "value": 0,
+          "advancedCombatSkills": {
+            "attack": {
+              "label": "Attack",
+              "value": 0,
+              "baseCost": 7
+            },
+            "damage": {
+              "label": "Damage" ,
+              "value": 0,
+              "baseCost": 7
+            },
+            "grabEffectiveness": {
+              "label": "Effectiveness (Grab)",
+              "value": 0,
+              "baseCost": 5
+            },
+            "pushEffectiveness": {
+              "label": "Effectiveness (Push)",
+              "value": 0,
+              "baseCost": 5
+            },
+            "throwEffectiveness": {
+              "label": "Effectiveness (Throw/Tackle)",
+              "value": 0,
+              "baseCost": 5
+            },
+            "strikeEffectiveness": {
+              "label": "Effectiveness (Strike)",
+              "value": 0,
+              "baseCost": 5
+            },
+            "breakEffectiveness": {
+              "label": "Effectiveness (Break Free)",
+              "value": 0,
+              "baseCost": 5
+            }
+          }
         }
       },
       "integrity": {
@@ -168,6 +288,7 @@
       },
       "race": "",
       "armor": {
+        "equipped": false,
         "name": "",
         "dr": 0,
         "drDice": 0,
@@ -201,12 +322,14 @@
         }
       },
       "shield": {
+        "equipped": false,
         "name": "",
         "dr": 0,
         "drDice": 0,
         "defensePenalty": 0,
         "size": "small",
         "cover": 0,
+        "flanks": 0,
         "fatigue": {
           "base": 0,
           "skill": 0,
@@ -229,6 +352,10 @@
         "silver": 0,
         "gold": 0,
         "platinum": 0
+      },
+      "settings": {
+        "primary": "expert",
+        "secondary": "expert"
       }
     },
     "npc": {
@@ -242,13 +369,13 @@
   },
   "Item": {
     "types": [
+      "burden",
+      "characteristic",
+      "contact",
+      "feature",
       "item",
       "skill",
-      "feature",
-      "weapon",
-      "characteristic",
-      "flaw",
-      "contact"
+      "weapon"
     ],
     "templates": {
       "base": {
@@ -257,7 +384,10 @@
       "item": {
         "quantity": 1,
         "quality": 0,
-        "weight": "none",
+        "weight": {
+          "value": 0,
+          "type": ""
+        },
         "cost": {
           "source": 0,
           "local": 0,
@@ -288,7 +418,7 @@
       "type": "description",
       "value": 0
     },
-    "flaw": {
+    "burden": {
       "templates": [
         "base"
       ],
@@ -300,11 +430,25 @@
         "base",
         "item"
       ],
+      "equipped": true,
       "formula": "1d20bx",
       "damageFormula": "1d12bx",
       "damageType": "piercing",
+      "skillSuite": "melee",
+      "size": "small",
+      "attack": 0,
+      "damage": 0,
       "recovery": 0,
-      "parry": 0
+      "parry": 0,
+      "measure": 0,
+      "bonus": "",
+      "traits": "",
+      "characterBonuses": {
+        "attack": 0,
+        "recovery": 0,
+        "parry": 0,
+        "damage": 0
+      }
     }
   }
 }

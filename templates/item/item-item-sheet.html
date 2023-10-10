@@ -1,16 +1,16 @@
 <form class="{{cssClass}}" autocomplete="off">
   <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-2col">
         <div class="resource">
           <label class="resource-label">Quantity</label>
-          <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+          <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
         </div>
         <div class="resource">
           <label class="resource-label">Quality</label>
-          <input type="text" name="system.quality" value="{{system.quality}}" data-dtype="Number"/>
+          <input type="text" name="system.quality" value="{{system.quality}}" data-dtype="Number" />
         </div>
       </div>
     </div>
@@ -27,8 +27,10 @@
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
-      {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the
+      rollData prop. --}}
+      {{editor system.description target="system.description" rollData=rollData button=true owner=owner
+      editable=editable}}
     </div>
 
     {{!-- Attributes Tab --}}
@@ -36,27 +38,42 @@
       {{!-- As you add new fields, add them in here! --}}
       <div class="resource">
         <label class="resource-label">Roll Formula</label>
-        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" />
+      </div>
+      <div class="resource">
+        <label class="resource-label">Weight</label>
+        <div class="flexrow">
+          <input type="text" name="system.weight.value" value="{{system.weight.value}}" data-dtype="Number" />
+          <select name="system.weight.type" data-type="String">
+            {{#select system.weight.type}}
+            <option value="">None</option>
+            <option value="tiny">Tiny</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+            {{/select}}
+          </select>
+        </div>
       </div>
       <div class="resource grid grid-4col">
         <div class="resource">
           <label class="resource-label">Source</label>
-          <input type="text" name="system.cost.source" value="{{system.cost.source}}" data-dtype="Number"/>
+          <input type="text" name="system.cost.source" value="{{system.cost.source}}" data-dtype="Number" />
           {{ system.fullCost.source }}
         </div>
         <div class="resource">
           <label class="resource-label">Local</label>
-          <input type="text" name="system.cost.local" value="{{system.cost.local}}" data-dtype="Number"/>
+          <input type="text" name="system.cost.local" value="{{system.cost.local}}" data-dtype="Number" />
           {{ system.fullCost.local }}
         </div>
         <div class="resource">
           <label class="resource-label">Nearby</label>
-          <input type="text" name="system.cost.nearby" value="{{system.cost.nearby}}" data-dtype="Number"/>
+          <input type="text" name="system.cost.nearby" value="{{system.cost.nearby}}" data-dtype="Number" />
           {{ system.fullCost.nearby }}
         </div>
         <div class="resource">
           <label class="resource-label">Distant</label>
-          <input type="text" name="system.cost.distant" value="{{system.cost.distant}}" data-dtype="Number"/>
+          <input type="text" name="system.cost.distant" value="{{system.cost.distant}}" data-dtype="Number" />
           {{ system.fullCost.distant }}
         </div>
       </div>

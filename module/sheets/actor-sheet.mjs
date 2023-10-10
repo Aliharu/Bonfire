@@ -86,7 +86,7 @@ export class BonfireActorSheet extends ActorSheet {
     const weapons = [];
     const skills = [];
     const features = [];
-    const flaws = [];
+    const burdens = [];
     const characteristics = {
       devotions: [],
       descriptions: [],
@@ -108,8 +108,8 @@ export class BonfireActorSheet extends ActorSheet {
       if (i.type === 'skill') {
         skills.push(i);
       }
-      if (i.type === 'flaw') {
-        flaws.push(i);
+      if (i.type === 'burden') {
+        burdens.push(i);
       }
       if (i.type === 'characteristic') {
         switch (i.system.type) {
@@ -128,16 +128,33 @@ export class BonfireActorSheet extends ActorSheet {
           case 'reputation':
             characteristics['reputations'].push(i);
             break;
+          case 'flaw':
+            characteristics['flaws'].push(i);
+            break;
         }
       }
     }
+
+    if (context.type === 'character') {
+      const attacks = [];
+      for (const weapon of weapons.filter(weapon => weapon.system.equipped)) {
+        attacks.push(
+          {
+            name: weapon.name,
+            attack: `${weapon.attack}`
+          }
+        );
+      }
+    }
+
+
 
     // Assign and return
     context.gear = gear;
     context.weapons = weapons;
     context.characteristics = characteristics;
     context.skills = skills;
-    context.flaws = flaws;
+    context.burdens = burdens;
   }
 
   /* -------------------------------------------- */
@@ -172,6 +189,16 @@ export class BonfireActorSheet extends ActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       item.delete();
       li.slideUp(200, () => this.render(false));
+    });
+
+    html.find('.toggle-equipped').click(ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      let li = $(ev.currentTarget).parents(".item");
+      let item = this.actor.items.get(li.data("item-id"));
+      item.update({
+        [`system.equipped`]: !item.system.equipped,
+      });
     });
 
     // Active Effect management
@@ -361,8 +388,8 @@ export class BonfireActorSheet extends ActorSheet {
     if (dataset.roll) {
       let label = dataset.label ? `[attribute] ${dataset.label}` : '';
       let rollString = dataset.roll;
-      if(dataset.type === 'skill') {
-        if(this.actor.system.skillSuites[dataset.skill].trained) {
+      if (dataset.type === 'skill') {
+        if (this.actor.system.skillSuites[dataset.skill].trained) {
           rollString = `d20bx+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
         }
         else {

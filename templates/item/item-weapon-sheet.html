@@ -3,16 +3,6 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
-      <div class="grid grid-2col">
-        <div class="resource">
-          <label class="resource-label">Recovery</label>
-          <input type="text" name="system.recovery" value="{{system.recovery}}" data-dtype="Number" />
-        </div>
-        <div class="resource">
-          <label class="resource-label">Parry</label>
-          <input type="text" name="system.parry" value="{{system.parry}}" data-dtype="Number" />
-        </div>
-      </div>
     </div>
   </header>
 
@@ -33,23 +23,83 @@
 
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
-      <div class="resource">
-        <label class="resource-label">Formula</label>
-        <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" />
+      <div class="grid grid-2col">
+        <div class="resource">
+          <label class="resource-label">Base Dice Formula</label>
+          <input type="text" name="system.formula" value="{{system.formula}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Base Weapon Damage</label>
+          <input type="text" name="system.damageFormula" value="{{system.damageFormula}}" data-dtype="String" />
+        </div>
+      </div>
+      <div class="grid grid-3col">
+        <div class="resource">
+          <div class="resource-label">Damage Type</div>
+          <select name="system.damageType" data-type="String">
+            {{#select system.damageType}}
+            <option value="crushing">Crushing</option>
+            <option value="piercing">Piercing</option>
+            <option value="slashing">Slashing</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <div class="resource-label">Skill Suite</div>
+          <select name="system.skillSuite" data-type="String">
+            {{#select system.skillSuite}}
+            <option value="melee">Melee</option>
+            <option value="ranged">Ranged</option>
+            <option value="unarmed">Unarmed</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <div class="resource-label">Size</div>
+          <select name="system.skillSuite" data-type="String">
+            {{#select system.skillSuite}}
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+            <option value="huge">Huge</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Measure</label>
+          <input type="text" name="system.measure" value="{{system.measure}}" data-dtype="Number" />
+        </div>
+      </div>
+      <div>
+        <div class="resource">
+          <label class="resource-label">Misc Bonuses (Skill bonuses are calculated automatically)</label>
+        </div>
+      </div>
+      <div class="grid grid-4col">
+        <div class="resource">
+          <label class="resource-label">Attack</label>
+          <input type="text" name="system.attack" value="{{system.attack}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Damage</label>
+          <input type="text" name="system.damage" value="{{system.damage}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Recovery</label>
+          <input type="text" name="system.recovery" value="{{system.recovery}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Parry</label>
+          <input type="text" name="system.parry" value="{{system.parry}}" data-dtype="Number" />
+        </div>
       </div>
       <div class="resource">
-        <label class="resource-label">Damage Formula</label>
-        <input type="text" name="system.damageFormula" value="{{system.damageFormula}}" data-dtype="String" />
+        <label class="resource-label">Bonus</label>
+        <textarea type="text" name="system.bonus" rows="4">{{system.bonus}}</textarea>
       </div>
       <div class="resource">
-        <label class="resource-label">Damage Type</label>
-        <select name="system.damageType" data-type="String">
-          {{#select system.damageType}}
-          <option value="crushing">Crushing</option>
-          <option value="piercing">Piercing</option>
-          <option value="slashing">Slashing</option>
-          {{/select}}
-        </select>
+        <label class="resource-label">Traits</label>
+        <textarea type="text" name="system.traits" rows="4">{{system.traits}}</textarea>
       </div>
     </div>
   </section>
