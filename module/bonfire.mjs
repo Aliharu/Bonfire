@@ -9,6 +9,7 @@ import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { BONFIRE } from "./helpers/config.mjs";
 import { BonfireDie } from "./dice/dice.mjs";
 import { BonfireCombat } from "./combat.js";
+import { RollForm } from "./apps/dice-roller.js";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -21,7 +22,8 @@ Hooks.once('init', async function() {
   game.bonfire = {
     BonfireActor,
     BonfireItem,
-    rollItemMacro
+    rollItemMacro,
+    RollForm
   };
 
   // Add custom constants for configuration.

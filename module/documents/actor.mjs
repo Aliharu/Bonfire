@@ -74,49 +74,49 @@ export class BonfireActor extends Actor {
         attribute.mod = 0;
       }
 
-      if(systemData.integrity.value <= 5) {
+      if (systemData.integrity.value <= 5) {
         systemData.gritDice.dice = `N/A`;
       }
       else {
         var gridDiceVal = 4;
-        if(systemData.integrity.value > 10){ 
+        if (systemData.integrity.value > 10) {
           gridDiceVal = 6;
         }
-        if(systemData.integrity.value > 15){ 
+        if (systemData.integrity.value > 15) {
           gridDiceVal = 8;
         }
-        if(systemData.integrity.value > 20){ 
+        if (systemData.integrity.value > 20) {
           gridDiceVal = 10;
         }
-        if(systemData.race.toLowerCase() === 'human'){ 
+        if (systemData.race.toLowerCase() === 'human') {
           gridDiceVal += 2;
         }
         systemData.gritDice.dice = `D${gridDiceVal}`;
       }
-  
-      if(systemData.vitality.damage > 0) {
+
+      if (systemData.vitality.damage > 0) {
         systemData.vitality.status = 'Hurt';
       }
-      if(systemData.vitality.damage > Math.ceil(systemData.vitality.max / 4)) {
+      if (systemData.vitality.damage > Math.ceil(systemData.vitality.max / 4)) {
         systemData.vitality.status = 'Bloodied';
       }
-      if(systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 2)) {
+      if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 2)) {
         systemData.vitality.status = 'Wounded';
       }
-      if(systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 3)) {
+      if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 3)) {
         systemData.vitality.status = 'Critical';
       }
-  
-      if(systemData.stress.damage > 0) {
+
+      if (systemData.stress.damage > 0) {
         systemData.stress.status = 'Unsure';
       }
-      if(systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
+      if (systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
         systemData.stress.status = 'Nervous';
       }
-      if(systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
+      if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
         systemData.stress.status = 'Shaken';
       }
-      if(systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 3)) {
+      if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 3)) {
         systemData.stress.status = 'Breaking';
       }
     }
@@ -160,11 +160,97 @@ export class BonfireActor extends Actor {
     systemData.combatStatMods = combatStatMods;
     var totalCRPRequired = 0;
 
-    for(var i = 0; i < systemData.level.value; i++) {
+    for (var i = 0; i < systemData.level.value; i++) {
       totalCRPRequired += 50 + (3 * (i + 1));
     }
 
     systemData.crp.toLevel = totalCRPRequired - systemData.crp.spent;
+    const attacks = [];
+
+    const stengthRecoverySizes = {
+      'small': 1,
+      'medium': 2,
+      'large': 3,
+      'huge': 4,
+    };
+    const minRecovery = {
+      'crushing': {
+        'small': 4,
+        'medium': 5,
+        'large': 6,
+        'huge': 6
+      },
+      'piercing': {
+        'small': 2,
+        'medium': 2,
+        'large': 2,
+        'huge': 2
+      },
+      'slashing': {
+        'small': 3,
+        'medium': 3,
+        'large': 3,
+        'huge': 4
+      },
+    };
+    for (const weapon of actorData.items.filter(item => item.type === 'weapon' && item.system.equipped)) {
+      let attackBonus = combatStatMods.attack + systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value + weapon.system.attack + weapon.system.characterBonuses.attack + systemData.attack.value;
+      let damageBonus = combatStatMods.damage + weapon.system.damage + (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.damage.value || 0) + weapon.system.characterBonuses.damage + systemData.recovery.value;
+
+      let recoveryBonus = Math.ceil((systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value || 0) / 2) + combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.recovery + weapon.system.characterBonuses.recovery + systemData.recovery.value;
+      let recovery = weapon.system.recovery - recoveryBonus;
+      let defense = systemData.defense.value + combatStatMods.defense + systemData.defense.value;
+      let parry = weapon.system.parry + weapon.system.characterBonuses.parry + combatStatMods.defense + systemData.parry.value;
+      let dr = systemData.dr.value;
+      let diceDR = systemData.diceDr.value;
+      let parryDR = '2/d';
+      let name = weapon.name;
+      let measure = weapon.system.measure;
+      let damageFormula = weapon.system.damageFormula;
+      if (weapon.system.skillSuite !== 'ranged') {
+        measure += systemData.measure.value;
+      }
+
+      if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
+        parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
+        name = `${name} & ${systemData.shield.name}`;
+      }
+      if (systemData.armor.equipped) {
+        dr += systemData.armor.dr;
+        diceDR += systemData.armor.diceDr;
+      }
+      if (weapon.system.damageType === 'piercing') {
+        damageFormula = this.calculatePiercingDamage(damageBonus, damageFormula);
+      }
+      else if (weapon.system.damageType === 'slashing') {
+        damageFormula = this.calculateSlashingDamage(damageBonus, damageFormula);
+      }
+      else {
+        damageFormula = `${damageFormula}+${damageBonus}`
+      }
+      recovery = Math.max(recovery, weapon.system.minRecovery);
+      attacks.push(
+        {
+          id: attacks.length,
+          name: name,
+          measure: measure,
+          attack: `${weapon.system.formula}+${attackBonus}`,
+          damage: damageFormula,
+          damageType: weapon.system.damageType.charAt(0).toUpperCase(),
+          recovery: recovery,
+          initiative: systemData.init.value + systemData.armor.penalties.initiative.total + combatStatMods.initiative,
+
+          defense: defense,
+          defenseFormula: `1d20bx+${defense}`,
+          flanks: systemData.flanks.value + systemData.shield.flanks,
+          parry: parry,
+          cover: systemData.cover.value + systemData.shield.cover,
+          parryDR: parryDR,
+          DR: `${diceDR}/d+${dr}`,
+        }
+      );
+    }
+    systemData.attacks = attacks;
   }
 
   /**
@@ -176,6 +262,115 @@ export class BonfireActor extends Actor {
     // Make modifications to data here. For example:
     const systemData = actorData.system;
     systemData.xp = (systemData.cr * systemData.cr) * 100;
+  }
+
+  extractDiceInfo(inputString) {
+    const diceRegex = /(\d+)d(\d+)/g;
+    const matches = inputString.match(diceRegex);
+    const diceInfo = {};
+
+    if (matches) {
+      matches.forEach(match => {
+        const [_, numberOfDice, numberOfFaces] = match.match(/(\d+)d(\d+)/);
+        diceInfo[parseInt(numberOfFaces)] = parseInt(numberOfDice);
+      });
+      return diceInfo;
+    } else {
+      return null; // Return null if no dice information is found
+    }
+  }
+
+  calculateSlashingDamage(value, damageFormula) {
+    const formulaInfo = this.extractDiceInfo(damageFormula);
+
+    let d4Count = 0;
+    let currentDie = 0;
+
+    let damageFormulaString = '';
+
+    if (value === 0) {
+      return '';
+    }
+
+    for (let i = 0; i < value; i++) {
+      if (currentDie === 0) {
+        currentDie = 3;
+      }
+      else if (currentDie === 3) {
+        currentDie = 4;
+      }
+      else if (currentDie === 4) {
+        currentDie = 0;
+        d4Count++;
+      }
+    }
+
+    if (formulaInfo[4] || d4Count) {
+      formulaInfo[4] = (formulaInfo[4] || 0) + d4Count;
+    }
+
+
+    if (currentDie !== 0) {
+      formulaInfo[currentDie] = (formulaInfo[currentDie] || 0) + 1;
+    }
+
+    for (const numberOfFaces in formulaInfo) {
+      if (damageFormulaString !== '') {
+        damageFormulaString += '+';
+      }
+      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}bx`;
+    }
+
+    return damageFormulaString;
+  }
+
+  calculatePiercingDamage(value, damageFormula) {
+    const formulaInfo = this.extractDiceInfo(damageFormula);
+
+    let d8Count = 0;
+    let currentDie = 0;
+
+    let damageFormulaString = '';
+
+    if (value === 0) {
+      return '';
+    }
+
+    for (let i = 0; i < value; i++) {
+      if (currentDie === 0) {
+        currentDie = 3;
+      }
+      else if (currentDie === 3) {
+        currentDie = 4;
+      }
+      else if (currentDie === 4) {
+        currentDie = 6;
+      }
+      else if (currentDie === 6) {
+        currentDie = 8;
+      }
+      else if (currentDie === 8) {
+        currentDie = 0;
+        d8Count++;
+      }
+    }
+
+    if (formulaInfo[8] || d8Count) {
+      formulaInfo[8] = (formulaInfo[8] || 0) + d8Count;
+    }
+
+    if (currentDie !== 0) {
+      formulaInfo[currentDie] = (formulaInfo[currentDie] || 0) + 1;
+    }
+
+    for (const numberOfFaces in formulaInfo) {
+      if (damageFormulaString !== '') {
+        damageFormulaString += '+';
+      }
+      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}bx`;
+    }
+
+    return damageFormulaString;
   }
 
   /**

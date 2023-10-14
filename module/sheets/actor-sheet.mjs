@@ -1,4 +1,5 @@
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/effects.mjs";
+import { RollForm } from "../apps/dice-roller.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -11,7 +12,7 @@ export class BonfireActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["bonfire", "sheet", "actor"],
       template: "systems/bonfire/templates/actor/actor-sheet.html",
-      width: 810,
+      width: 880,
       height: 880,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
@@ -135,20 +136,6 @@ export class BonfireActorSheet extends ActorSheet {
       }
     }
 
-    if (context.type === 'character') {
-      const attacks = [];
-      for (const weapon of weapons.filter(weapon => weapon.system.equipped)) {
-        attacks.push(
-          {
-            name: weapon.name,
-            attack: `${weapon.attack}`
-          }
-        );
-      }
-    }
-
-
-
     // Assign and return
     context.gear = gear;
     context.weapons = weapons;
@@ -199,6 +186,26 @@ export class BonfireActorSheet extends ActorSheet {
       item.update({
         [`system.equipped`]: !item.system.equipped,
       });
+    });
+
+    html.find('.toggle-equipped-shield').click(ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.actor.update({
+        [`system.shield.equipped`]: !this.actor.system.shield.equipped,
+      });
+    });
+
+    html.find('.toggle-equipped-armor').click(ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.actor.update({
+        [`system.armor.equipped`]: !this.actor.system.armor.equipped,
+      });
+    });
+
+    html.find('.attack-button').mousedown(ev => {
+      new RollForm(this.actor, { event: ev }, {}, { 'attackId': ev.currentTarget.dataset.id, 'dialogType': ev.currentTarget.dataset.dialog, 'index': ev.currentTarget.dataset.index }).render(true);
     });
 
     // Active Effect management

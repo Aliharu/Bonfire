@@ -56,8 +56,8 @@
         </div>
         <div class="resource">
           <div class="resource-label">Size</div>
-          <select name="system.skillSuite" data-type="String">
-            {{#select system.skillSuite}}
+          <select name="system.size" data-type="String">
+            {{#select system.size}}
             <option value="small">Small</option>
             <option value="medium">Medium</option>
             <option value="large">Large</option>
@@ -68,6 +68,14 @@
         <div class="resource">
           <label class="resource-label">Measure</label>
           <input type="text" name="system.measure" value="{{system.measure}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Max Range</label>
+          <input type="text" name="system.maxRange" value="{{system.maxRange}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Min Recovery</label>
+          <input type="text" name="system.minRecovery" value="{{system.minRecovery}}" data-dtype="Number" />
         </div>
       </div>
       <div>

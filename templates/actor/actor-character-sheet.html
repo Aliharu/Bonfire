@@ -158,6 +158,51 @@
 
     {{!-- Combat Tab --}}
     <div class="tab combat" data-group="primary" data-tab="combat">
+      <div class="grid grid-3col">
+        {{#each system.attacks as |attack key|}}
+        <div class="resource">
+          <label class="resource-label">{{attack.name}}</label>
+          <div>
+            <table>
+              <tr>
+                <th>Attacks</th>
+                <th>Defenses</th>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Meas: </span>{{ attack.measure }}</td>
+                <td><span style="font-style:bold;">Def: </span>{{ attack.defense }}</td>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Atk: </span>{{ attack.attack }}</td>
+                <td><span style="font-style:bold;">Flanks: </span>{{ attack.flanks }}</td>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Dmg: </span>{{ attack.damage }}</td>
+                <td><span style="font-style:bold;">Parry: </span>{{ attack.parry }}</td>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Type: </span>{{ attack.damageType }}</td>
+                <td><span style="font-style:bold;">Cover: </span>{{ attack.cover }}</td>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Rec: </span>{{ attack.recovery }}</td>
+                <td><span style="font-style:bold;">Parry DR: </span>{{ attack.parryDR }}</td>
+              </tr>
+              <tr>
+                <td><span style="font-style:bold;">Init: </span>{{ attack.initiative }}</td>
+                <td><span style="font-style:bold;">DR: </span>{{ attack.DR }}</td>
+              </tr>
+            </table>
+            <img class='rollable attack-button' src='icons/skills/melee/strike-sword-steel-yellow.webp' title='Attack'
+              data-dialog='attack' data-id='{{attack.id}}' data-index='{{key}}' />
+            <img class='rollable attack-button' src='icons/skills/melee/blood-slash-foam-red.webp' title='Damage'
+              data-dialog='damage' data-id='{{attack.id}}' data-index='{{key}}' />
+            <img class='rollable attack-button' src='icons/skills/melee/shield-block-gray-yellow.webp' title='Defense'
+              data-dialog='defense' data-id='{{attack.id}}' data-index='{{key}}' />
+          </div>
+        </div>
+        {{/each}}
+      </div>
       <div class="grid grid-2col">
         <ol class="items-list">
           {{#each system.combatSkills as |skill key|}}
@@ -217,6 +262,10 @@
             </div>
             <div class="grid grid-4col">
               <div class="flex-group-center">
+                <div class="resource-label">Attack</div>
+                <input type="text" name="system.attack.value" value="{{system.attack.value}}" data-dtype="Number" />
+              </div>
+              <div class="flex-group-center">
                 <div class="resource-label">Initiative</div>
                 <input type="text" name="system.init.value" value="{{system.init.value}}" data-dtype="Number" />
               </div>
@@ -243,6 +292,10 @@
               <div class="flex-group-center">
                 <div class="resource-label">Flanks</div>
                 <input type="text" name="system.flanks.value" value="{{system.flanks.value}}" data-dtype="Number" />
+              </div>
+              <div class="flex-group-center">
+                <div class="resource-label">Cover</div>
+                <input type="text" name="system.cover.value" value="{{system.cover.value}}" data-dtype="Number" />
               </div>
               <div class="flex-group-center">
                 <div class="resource-label">Trauma</div>
@@ -289,13 +342,14 @@
         <li class="flexrow">
           <div class="resource-label">{{ skill.label }}</div>
         </li>
-        {{#each skill.advancedCombatSkills as |advSkill adkKey|}}
+        {{#each skill.advancedCombatSkills as |advSkill addKey|}}
         <li class="flexrow">
           <div class="item-name">
             <h4>{{advSkill.label}}</h4>
           </div>
           <div class="item-formula item-prop">{{advSkill.baseCost}}</div>
-          <input type="text" name="advSkill.value" value="{{advSkill.value}}" data-dtype="Number" />
+          <input type="text" name="system.combatSkills.{{key}}.advancedCombatSkills.{{addKey}}.value"
+            value="{{advSkill.value}}" data-dtype="Number" />
         </li>
         {{/each}}
         {{/each}}
@@ -444,7 +498,13 @@
       </ol>
       <div class="grid grid-2col">
         <div class="resource">
-          <div class="resource-label">Armor</div>
+          <div class="resource-label">Armor {{#if system.armor.equipped}}
+            <a class="item-control toggle-equipped-armor" title="Unequip Armor" style="color:#F9B516;"><i
+                class="fas fa-hand"></i></a>
+            {{else}}
+            <a class="item-control toggle-equipped-armor" title="Equip Armor"><i class="fas fa-hand"></i></a>
+            {{/if}}
+          </div>
           <input type="text" name="system.armor.name" value="{{system.armor.name}}" />
           <div class="grid grid-3col">
             <div class="resource-label">DR</div>
@@ -452,7 +512,7 @@
             <div class="resource-label">Skill Adj.</div>
             <input placeholder="DR" type="text" name="system.armor.dr" value="{{system.armor.dr}}"
               data-dtype="Number" />
-            <input placeholder="DR/d" type="text" name="system.armor.drDice" value="{{system.armor.drDice}}"
+            <input placeholder="DR/d" type="text" name="system.armor.diceDr" value="{{system.armor.diceDr}}"
               data-dtype="Number" />
             <input placeholder="Skill Adjustment" type="text" name="system.armor.skillAdjustment.value"
               value="{{system.armor.skillAdjustment.value}}" data-dtype="Number" />
@@ -511,7 +571,13 @@
           </div>
         </div>
         <dicv class="resource">
-          <div class="resource-label">Shield</div>
+          <div class="resource-label">Shield {{#if system.shield.equipped}}
+            <a class="item-control toggle-equipped-shield" title="Unequip Shield" style="color:#F9B516;"><i
+                class="fas fa-hand"></i></a>
+            {{else}}
+            <a class="item-control toggle-equipped-shield" title="Equip Shield"><i class="fas fa-hand"></i></a>
+            {{/if}}
+          </div>
           <input type="text" name="system.shield.name" value="{{system.shield.name}}" />
           <div class="grid grid-5col">
             <div class="resource-label">
@@ -530,11 +596,11 @@
               Flanks
             </div>
             <input type="text" name="system.shield.dr" value="{{system.shield.dr}}" data-dtype="Number" />
-            <input type="text" name="system.shield.drDice" value="{{system.shield.drDice}}" data-dtype="Number" />
+            <input type="text" name="system.shield.diceDr" value="{{system.shield.diceDr}}" data-dtype="Number" />
             <input type="text" name="system.shield.defensePenalty" value="{{system.shield.defensePenalty}}"
               data-dtype="Number" />
             <input type="text" name="system.shield.cover" value="{{system.shield.cover}}" data-dtype="Number" />
-            <input type="text" name="system.flanks.cover" value="{{system.flanks.cover}}" data-dtype="Number" />
+            <input type="text" name="system.shield.flanks" value="{{system.shield.flanks}}" data-dtype="Number" />
           </div>
           <div class="grid grid-4col">
             <div class="resource-label">
@@ -617,6 +683,12 @@
           <label for="system.level.value" class="resource-label">Level</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="system.level.value" value="{{system.level.value}}" data-dtype="Number" />
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label for="system.size.value" class="resource-label">Size</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input type="text" name="system.size.value" value="{{system.size.value}}" />
           </div>
         </div>
       </div>

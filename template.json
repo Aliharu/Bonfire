@@ -19,7 +19,13 @@
         "init": {
           "value": 0
         },
+        "attack": {
+          "value": 0
+        },
         "defense": {
+          "value": 0
+        },
+        "damage": {
           "value": 0
         },
         "dr": {
@@ -37,12 +43,16 @@
         "measure": {
           "value": 0
         },
+        "cover": {
+          "value": 0
+        },
         "flanks": {
           "value": 0
         },
         "traumaThreshhold": {
           "value": 0
         },
+        "size": "medium",
         "speed": {
           "crawl": 2.5,
           "walk": 5,
@@ -177,8 +187,10 @@
         },
         "armor": {
           "trained": false,
+          "equipped": false,
           "label": "Armor",
-          "value": 0,
+          "dr": 0,
+          "diceDr": 0,
           "advancedCombatSkills": {
             "defense": {
               "label": "Defense",
@@ -204,8 +216,10 @@
         },
         "shield": {
           "trained": false,
+          "equipped": false,
           "label": "Shield",
-          "value": 0,
+          "dr": 0,
+          "diceDr": 0,
           "advancedCombatSkills": {
             "breakage": {
               "label": "Breakage",
@@ -291,7 +305,7 @@
         "equipped": false,
         "name": "",
         "dr": 0,
-        "drDice": 0,
+        "diceDr": 0,
         "bonus": "",
         "skillAdjustment": {
           "value": 0,
@@ -325,7 +339,7 @@
         "equipped": false,
         "name": "",
         "dr": 0,
-        "drDice": 0,
+        "diceDr": 0,
         "defensePenalty": 0,
         "size": "small",
         "cover": 0,
@@ -436,6 +450,8 @@
       "damageType": "piercing",
       "skillSuite": "melee",
       "size": "small",
+      "maxRange": 0,
+      "minRecovery": 0,
       "attack": 0,
       "damage": 0,
       "recovery": 0,
