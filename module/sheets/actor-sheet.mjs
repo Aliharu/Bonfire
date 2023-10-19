@@ -88,6 +88,7 @@ export class BonfireActorSheet extends ActorSheet {
     const skills = [];
     const features = [];
     const burdens = [];
+    const expenditures = [];
     const characteristics = {
       devotions: [],
       descriptions: [],
@@ -111,6 +112,9 @@ export class BonfireActorSheet extends ActorSheet {
       }
       if (i.type === 'burden') {
         burdens.push(i);
+      }
+      if (i.type === 'expenditure') {
+        expenditures.push(i);
       }
       if (i.type === 'characteristic') {
         switch (i.system.type) {
@@ -142,6 +146,7 @@ export class BonfireActorSheet extends ActorSheet {
     context.characteristics = characteristics;
     context.skills = skills;
     context.burdens = burdens;
+    context.expenditures = expenditures;
   }
 
   /* -------------------------------------------- */
@@ -397,10 +402,10 @@ export class BonfireActorSheet extends ActorSheet {
       let rollString = dataset.roll;
       if (dataset.type === 'skill') {
         if (this.actor.system.skillSuites[dataset.skill].trained) {
-          rollString = `d20bx+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
+          rollString = `d20x+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
         }
         else {
-          rollString = `d12bx+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
+          rollString = `d12x+@skillSuites.${dataset.skill}.value+@skillSuites.${dataset.skill}.mod`;
         }
       }
       let roll = new Roll(rollString, this.actor.getRollData());

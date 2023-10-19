@@ -43,12 +43,6 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = BonfireItem;
   CONFIG.Combat.documentClass = BonfireCombat;
 
-  CONFIG.Dice.terms.d = BonfireDie;
-  const diceTypesIdx = CONFIG.Dice.types.findIndex((x) => x.DENOMINATION === 'd');
-  diceTypesIdx > -1
-      ? CONFIG.Dice.types[diceTypesIdx] = BonfireDie
-      : CONFIG.Dice.types.push(BonfireDie);
-
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("bonfire", BonfireActorSheet, { makeDefault: true });

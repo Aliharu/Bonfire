@@ -189,8 +189,7 @@
           "trained": false,
           "equipped": false,
           "label": "Armor",
-          "dr": 0,
-          "diceDr": 0,
+          "value": 0,
           "advancedCombatSkills": {
             "defense": {
               "label": "Defense",
@@ -218,8 +217,7 @@
           "trained": false,
           "equipped": false,
           "label": "Shield",
-          "dr": 0,
-          "diceDr": 0,
+          "value": 0,
           "advancedCombatSkills": {
             "breakage": {
               "label": "Breakage",
@@ -389,7 +387,8 @@
       "feature",
       "item",
       "skill",
-      "weapon"
+      "weapon",
+      "expenditure"
     ],
     "templates": {
       "base": {
@@ -415,15 +414,16 @@
         "base",
         "item"
       ],
-      "formula": "d20bx"
+      "formula": "d20x"
     },
     "skill": {
       "templates": [
         "base"
       ],
-      "formula": "d20bx",
+      "formula": "d20x",
       "ranks": 0,
-      "mod": 0
+      "mod": 0,
+      "baseCost": 0
     },
     "characteristic": {
       "templates": [
@@ -439,14 +439,17 @@
       "crp": 0,
       "rank": 0
     },
+    "expenditure": {
+      "amount": 0
+    },
     "weapon": {
       "templates": [
         "base",
         "item"
       ],
       "equipped": true,
-      "formula": "1d20bx",
-      "damageFormula": "1d12bx",
+      "formula": "1d20x",
+      "damageFormula": "1d12x",
       "damageType": "piercing",
       "skillSuite": "melee",
       "size": "small",
@@ -457,6 +460,7 @@
       "recovery": 0,
       "parry": 0,
       "measure": 0,
+      "baseParry": 0,
       "bonus": "",
       "traits": "",
       "characterBonuses": {

@@ -14,10 +14,10 @@ export class BonfireItem extends Item {
   }
 
   prepareDerivedData() {
-    const actorData = this;
-    const systemData = actorData.system;
+    const itemData = this;
+    const systemData = itemData.system;
 
-    if(actorData.type === 'item') {
+    if(itemData.type === 'item') {
       systemData.fullCost = {
         source: systemData.cost.source,
         local: systemData.cost.local,
@@ -34,6 +34,12 @@ export class BonfireItem extends Item {
       systemData.fullCost.local = systemData.fullCost.local.toFixed(2);
       systemData.fullCost.nearby = systemData.fullCost.nearby.toFixed(2);
       systemData.fullCost.distant = systemData.fullCost.distant.toFixed(2);
+    }
+    if(itemData.type === 'skill') {
+      systemData.cost = (systemData.ranks * 3) + systemData.baseCost;
+      if(this.actor) {
+        systemData.cost -= this.actor.system.skillAdepts;
+      }
     }
   }
 

@@ -65,6 +65,8 @@
             {{/select}}
           </select>
         </div>
+      </div>
+      <div class="grid grid-4col">
         <div class="resource">
           <label class="resource-label">Measure</label>
           <input type="text" name="system.measure" value="{{system.measure}}" data-dtype="Number" />
@@ -77,6 +79,10 @@
           <label class="resource-label">Min Recovery</label>
           <input type="text" name="system.minRecovery" value="{{system.minRecovery}}" data-dtype="Number" />
         </div>
+        <div class="resource">
+          <label class="resource-label">Base Parry</label>
+          <input type="text" name="system.baseParry" value="{{system.baseParry}}" data-dtype="Number" />
+        </div>
       </div>
       <div>
         <div class="resource">
@@ -86,19 +92,19 @@
       <div class="grid grid-4col">
         <div class="resource">
           <label class="resource-label">Attack</label>
-          <input type="text" name="system.attack" value="{{system.attack}}" data-dtype="Number" />
+          <input type="text" name="system.characterBonuses.attack" value="{{system.characterBonuses.attack}}" data-dtype="Number" />
         </div>
         <div class="resource">
           <label class="resource-label">Damage</label>
-          <input type="text" name="system.damage" value="{{system.damage}}" data-dtype="Number" />
+          <input type="text" name="system.characterBonuses.damage" value="{{system.characterBonuses.damage}}" data-dtype="Number" />
         </div>
         <div class="resource">
           <label class="resource-label">Recovery</label>
-          <input type="text" name="system.recovery" value="{{system.recovery}}" data-dtype="Number" />
+          <input type="text" name="system.characterBonuses.recovery" value="{{system.characterBonuses.recovery}}" data-dtype="Number" />
         </div>
         <div class="resource">
           <label class="resource-label">Parry</label>
-          <input type="text" name="system.parry" value="{{system.parry}}" data-dtype="Number" />
+          <input type="text" name="system.characterBonuses.parry" value="{{system.characterBonuses.parry}}" data-dtype="Number" />
         </div>
       </div>
       <div class="resource">

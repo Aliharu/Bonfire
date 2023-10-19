@@ -38,6 +38,7 @@ export class BonfireActor extends Actor {
     this._prepareActorData(actorData);
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
+    this._prepareAttacks(actorData);
   }
 
   _prepareActorData(actorData) {
@@ -111,7 +112,7 @@ export class BonfireActor extends Actor {
         systemData.stress.status = 'Unsure';
       }
       if (systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
-        systemData.stress.status = 'Nervous';
+        systemData.stress.status = 'Tense';
       }
       if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
         systemData.stress.status = 'Shaken';
@@ -149,15 +150,12 @@ export class BonfireActor extends Actor {
       }
     }
 
-    var combatStatMods = {}
+    for (let [key, combatSkill] of Object.entries(systemData.combatSkills)) {
+      for (let [key, advancedCombatSkill] of Object.entries(combatSkill.advancedCombatSkills)) {
+        advancedCombatSkill.cost = (advancedCombatSkill.value * 3) + advancedCombatSkill.baseCost - systemData.martialAdepts;
+      }
+    }
 
-    combatStatMods.attack = CONFIG.BONFIRE.combatStatMods.dexAtk[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.intAtk[systemData.attributes.int.value];
-    combatStatMods.defense = CONFIG.BONFIRE.combatStatMods.dexDef[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willDef[systemData.attributes.will.value];
-    combatStatMods.initiative = CONFIG.BONFIRE.combatStatMods.dexInit[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willInit[systemData.attributes.will.value];
-    combatStatMods.damage = CONFIG.BONFIRE.combatStatMods.strDam[systemData.attributes.str.value];
-    combatStatMods.recovery = CONFIG.BONFIRE.combatStatMods.strRec[systemData.attributes.str.value];
-
-    systemData.combatStatMods = combatStatMods;
     var totalCRPRequired = 0;
 
     for (var i = 0; i < systemData.level.value; i++) {
@@ -165,6 +163,38 @@ export class BonfireActor extends Actor {
     }
 
     systemData.crp.toLevel = totalCRPRequired - systemData.crp.spent;
+    systemData.crp.totalExpenditure = actorData.items.filter(item => item.type === 'expenditure').reduce((sum, obj) => sum + obj.system.amount, 0);
+  }
+
+  /**
+   * Prepare NPC type specific data.
+   */
+  _prepareNpcData(actorData) {
+    if (actorData.type !== 'npc') return;
+  }
+
+  _prepareAttacks(actorData) {
+    const systemData = actorData.system;
+
+
+    var combatStatMods = {
+      attack: 0,
+      defense: 0,
+      initiative: 0,
+      damage: 0,
+      recovery: 0
+    }
+
+    if (actorData.type === 'character') {
+      combatStatMods.attack = CONFIG.BONFIRE.combatStatMods.dexAtk[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.intAtk[systemData.attributes.int.value];
+      combatStatMods.defense = CONFIG.BONFIRE.combatStatMods.dexDef[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willDef[systemData.attributes.will.value];
+      combatStatMods.initiative = CONFIG.BONFIRE.combatStatMods.dexInit[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willInit[systemData.attributes.will.value];
+      combatStatMods.damage = CONFIG.BONFIRE.combatStatMods.strDam[systemData.attributes.str.value];
+      combatStatMods.recovery = CONFIG.BONFIRE.combatStatMods.strRec[systemData.attributes.str.value];
+    }
+
+    systemData.combatStatMods = combatStatMods;
+
     const attacks = [];
 
     const stengthRecoverySizes = {
@@ -194,39 +224,58 @@ export class BonfireActor extends Actor {
       },
     };
     for (const weapon of actorData.items.filter(item => item.type === 'weapon' && item.system.equipped)) {
-      let attackBonus = combatStatMods.attack + systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value + weapon.system.attack + weapon.system.characterBonuses.attack + systemData.attack.value;
-      let damageBonus = combatStatMods.damage + weapon.system.damage + (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.damage.value || 0) + weapon.system.characterBonuses.damage + systemData.recovery.value;
+      let attackBonus = combatStatMods.attack + weapon.system.attack + weapon.system.characterBonuses.attack + systemData.attack.value;
+      let damageBonus = weapon.system.characterBonuses.damage + systemData.damage.value;
 
-      let recoveryBonus = Math.ceil((systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value || 0) / 2) + combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.recovery + weapon.system.characterBonuses.recovery + systemData.recovery.value;
+      let recoveryBonus = combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.recovery + weapon.system.characterBonuses.recovery + systemData.recovery.value;
       let recovery = weapon.system.recovery - recoveryBonus;
       let defense = systemData.defense.value + combatStatMods.defense + systemData.defense.value;
-      let parry = weapon.system.parry + weapon.system.characterBonuses.parry + combatStatMods.defense + systemData.parry.value;
+      let parry = 0
       let dr = systemData.dr.value;
       let diceDR = systemData.diceDr.value;
       let parryDR = '2/d';
       let name = weapon.name;
       let measure = weapon.system.measure;
       let damageFormula = weapon.system.damageFormula;
+      let initiative = systemData.init.value + combatStatMods.initiative;
+      let statDamage = 0;
+      let flanks = systemData.flanks.value;
+      let cover = systemData.cover.value;
+
       if (weapon.system.skillSuite !== 'ranged') {
         measure += systemData.measure.value;
+        statDamage = combatStatMods.damage;
+        parry = weapon.system.baseParry + weapon.system.characterBonuses.parry + systemData.parry.value;
       }
 
-      if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
-        parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
-        name = `${name} & ${systemData.shield.name}`;
+      if (actorData.type === 'character') {
+        attackBonus += systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value;
+        damageBonus += Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.damage.value / 2);
+        recoveryBonus += Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value / 2);
+        if (weapon.system.skillSuite !== 'ranged') {
+          parry += (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0);
+        }
+        if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
+          parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
+          name = `${name} & ${systemData.shield.name}`;
+          flanks += systemData.shield.flanks;
+          cover += systemData.shield.cover;
+        }
+        if (systemData.armor.equipped) {
+          dr += systemData.armor.dr;
+          diceDR += systemData.armor.diceDr;
+          initiative += systemData.armor.penalties.initiative.total;
+        }
       }
-      if (systemData.armor.equipped) {
-        dr += systemData.armor.dr;
-        diceDR += systemData.armor.diceDr;
-      }
+
       if (weapon.system.damageType === 'piercing') {
-        damageFormula = this.calculatePiercingDamage(damageBonus, damageFormula);
+        damageFormula = `${this.calculatePiercingDamage(damageBonus, damageFormula)}+${statDamage}`;
       }
       else if (weapon.system.damageType === 'slashing') {
-        damageFormula = this.calculateSlashingDamage(damageBonus, damageFormula);
+        damageFormula = `${this.calculateSlashingDamage(damageBonus, damageFormula)}+${statDamage}`;
       }
       else {
-        damageFormula = `${damageFormula}+${damageBonus}`
+        damageFormula = `${damageFormula}+${damageBonus + statDamage}`
       }
       recovery = Math.max(recovery, weapon.system.minRecovery);
       attacks.push(
@@ -238,30 +287,19 @@ export class BonfireActor extends Actor {
           damage: damageFormula,
           damageType: weapon.system.damageType.charAt(0).toUpperCase(),
           recovery: recovery,
-          initiative: systemData.init.value + systemData.armor.penalties.initiative.total + combatStatMods.initiative,
+          initiative: initiative,
 
           defense: defense,
-          defenseFormula: `1d20bx+${defense}`,
-          flanks: systemData.flanks.value + systemData.shield.flanks,
+          defenseFormula: `1d20x+${defense}`,
+          flanks: flanks,
           parry: parry,
-          cover: systemData.cover.value + systemData.shield.cover,
+          cover: cover,
           parryDR: parryDR,
           DR: `${diceDR}/d+${dr}`,
         }
       );
     }
     systemData.attacks = attacks;
-  }
-
-  /**
-   * Prepare NPC type specific data.
-   */
-  _prepareNpcData(actorData) {
-    if (actorData.type !== 'npc') return;
-
-    // Make modifications to data here. For example:
-    const systemData = actorData.system;
-    systemData.xp = (systemData.cr * systemData.cr) * 100;
   }
 
   extractDiceInfo(inputString) {
@@ -288,18 +326,11 @@ export class BonfireActor extends Actor {
 
     let damageFormulaString = '';
 
-    if (value === 0) {
-      return '';
-    }
-
     for (let i = 0; i < value; i++) {
       if (currentDie === 0) {
         currentDie = 3;
       }
       else if (currentDie === 3) {
-        currentDie = 4;
-      }
-      else if (currentDie === 4) {
         currentDie = 0;
         d4Count++;
       }
@@ -318,7 +349,7 @@ export class BonfireActor extends Actor {
       if (damageFormulaString !== '') {
         damageFormulaString += '+';
       }
-      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}bx`;
+      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}x`;
     }
 
     return damageFormulaString;
@@ -332,10 +363,6 @@ export class BonfireActor extends Actor {
 
     let damageFormulaString = '';
 
-    if (value === 0) {
-      return '';
-    }
-
     for (let i = 0; i < value; i++) {
       if (currentDie === 0) {
         currentDie = 3;
@@ -347,9 +374,6 @@ export class BonfireActor extends Actor {
         currentDie = 6;
       }
       else if (currentDie === 6) {
-        currentDie = 8;
-      }
-      else if (currentDie === 8) {
         currentDie = 0;
         d8Count++;
       }
@@ -367,7 +391,7 @@ export class BonfireActor extends Actor {
       if (damageFormulaString !== '') {
         damageFormulaString += '+';
       }
-      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}bx`;
+      damageFormulaString += `${formulaInfo[numberOfFaces]}d${numberOfFaces}x`;
     }
 
     return damageFormulaString;
