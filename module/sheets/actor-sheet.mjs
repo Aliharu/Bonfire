@@ -89,6 +89,7 @@ export class BonfireActorSheet extends ActorSheet {
     const features = [];
     const burdens = [];
     const expenditures = [];
+    const rudiments = [];
     const characteristics = {
       devotions: [],
       descriptions: [],
@@ -115,6 +116,9 @@ export class BonfireActorSheet extends ActorSheet {
       }
       if (i.type === 'expenditure') {
         expenditures.push(i);
+      }
+      if (i.type === 'rudiment') {
+        rudiments.push(i);
       }
       if (i.type === 'characteristic') {
         switch (i.system.type) {
@@ -147,6 +151,7 @@ export class BonfireActorSheet extends ActorSheet {
     context.skills = skills;
     context.burdens = burdens;
     context.expenditures = expenditures;
+    context.rudiments = rudiments;
   }
 
   /* -------------------------------------------- */
@@ -211,6 +216,51 @@ export class BonfireActorSheet extends ActorSheet {
 
     html.find('.attack-button').mousedown(ev => {
       new RollForm(this.actor, { event: ev }, {}, { 'attackId': ev.currentTarget.dataset.id, 'dialogType': ev.currentTarget.dataset.dialog, 'index': ev.currentTarget.dataset.index }).render(true);
+    });
+
+    html.find('.spell-button').mousedown(async ev => {
+      let confirmed = false;
+      const html = await renderTemplate("systems/bonfire/templates/dialogues/cast-spell.html");
+      new Dialog({
+        title: `Cast Spell`,
+        content: html,
+        buttons: {
+          roll: { label: "Cast", callback: () => confirmed = true },
+          cancel: { label: "Cancel", callback: () => confirmed = false }
+        },
+        render: (html) => {
+          html.find('.effect').on('change', async (ev) => {
+            let effect = parseInt(html.find('#effect').val());
+            let order = parseInt(html.find('#order').val());
+            let origin = parseInt(html.find('#origin').val());
+            let interval = parseInt(html.find('#interval').val());
+            let spellPoints = parseInt(html.find('#spellPoints').val());
+            var totalDrain = ((effect * order) * interval) + origin;
+            var orderAllowance = ((spellPoints - origin) / effect) / interval;
+
+            $("#totalDrain").text(totalDrain);
+            $("#orderAllowance").text(Math.floor(orderAllowance));
+          });
+        },
+        close: html => {
+          if (confirmed) {
+            let effect = parseInt(html.find('#effect').val());
+            let order = parseInt(html.find('#order').val());
+            let origin = parseInt(html.find('#origin').val());
+            let interval = parseInt(html.find('#interval').val());
+            let spellName = html.find('#spellName').val();
+            var totalDrain = ((effect * order) * interval) + origin;
+
+            const speaker = ChatMessage.getSpeaker({ actor: this.actor });
+
+            ChatMessage.create({
+              speaker: speaker,
+              flavor: `Spell Cast: ${spellName}`,
+              content: `<div>Order: ${order}</div><div>Origin: ${origin}</div><div>Effect: ${effect}</div><div>Interval: ${interval}</div><div>Total Drain: ${totalDrain}</div>`
+            });
+          }
+        }
+      }, { classes: ["dialog"] }).render(true);
     });
 
     // Active Effect management

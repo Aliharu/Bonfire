@@ -388,7 +388,8 @@
       "item",
       "skill",
       "weapon",
-      "expenditure"
+      "expenditure",
+      "rudiment"
     ],
     "templates": {
       "base": {
@@ -441,6 +442,10 @@
     },
     "expenditure": {
       "amount": 0
+    },
+    "rudiment": {
+      "drain": 0,
+      "type": ""
     },
     "weapon": {
       "templates": [

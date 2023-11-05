@@ -22,6 +22,13 @@
       "path": "lang/en.json"
     }
   ],
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/bonfire/assets/logo.png",
+      "thumbnail": "systems/bonfire/assets/logo.png"
+    }
+  ],
   "gridDistance": 5,
   "gridUnits": "ft",
   "primaryTokenAttribute": "vitality",
