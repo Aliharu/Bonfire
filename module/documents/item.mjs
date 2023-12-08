@@ -10,7 +10,13 @@ export class BonfireItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+  }
 
+  async _preCreate(data, options, user) {
+    await super._preCreate(data, options, user);
+    if (!data.img || data.img === "icons/svg/item-bag.svg") {
+      this.updateSource({ img: this.getImageUrl(data.type) });
+    }
   }
 
   prepareDerivedData() {
@@ -25,10 +31,10 @@ export class BonfireItem extends Item {
         distant: systemData.cost.distant,
       }
       for(var i = 0; i < systemData.quality; i++) {
-        systemData.fullCost.source = systemData.fullCost.source * 1.25;
-        systemData.fullCost.local = systemData.fullCost.local * 1.25;
-        systemData.fullCost.nearby = systemData.fullCost.nearby * 1.25;
-        systemData.fullCost.distant = systemData.fullCost.distant * 1.25;
+        systemData.fullCost.source = systemData.fullCost.source + (50 + (i * 10));
+        systemData.fullCost.local = systemData.fullCost.local + (50 + (i * 10));
+        systemData.fullCost.nearby = systemData.fullCost.nearby + (50 + (i * 10));
+        systemData.fullCost.distant = systemData.fullCost.distant + (50 + (i * 10));
       }
       systemData.fullCost.source = systemData.fullCost.source.toFixed(2);
       systemData.fullCost.local = systemData.fullCost.local.toFixed(2);
@@ -95,6 +101,34 @@ export class BonfireItem extends Item {
       });
       return roll;
     }
+  }
+
+  getImageUrl(type) {
+    if (type === 'skill') {
+      return "icons/svg/upgrade.svg";
+    }
+    if (type === 'characteristic') {
+      return "icons/svg/aura.svg";
+    }
+    if (type === 'contact') {
+      return "icons/svg/cowled.svg";
+    }
+    if (type === 'wound') {
+      return "icons/svg/blood.svg";
+    }
+    if (type === 'burden') {
+      return "icons/svg/daze.svg";
+    }
+    if (type === 'expenditure') {
+      return "systems/bonfire/assets/icons/gift-of-knowledge.svg";
+    }
+    if (type === 'rudiment') {
+      return "systems/bonfire/assets/icons/magic-swirl.svg";
+    }
+    if (type === 'weapon') {
+      return "icons/svg/sword.svg";
+    }
+    return "icons/svg/item-bag.svg";
   }
 
   async attack() {

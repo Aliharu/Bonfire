@@ -33,7 +33,7 @@
           <input type="text" name="system.damageFormula" value="{{system.damageFormula}}" data-dtype="String" />
         </div>
       </div>
-      <div class="grid grid-3col">
+      <div class="grid grid-4col">
         <div class="resource">
           <div class="resource-label">Damage Type</div>
           <select name="system.damageType" data-type="String">
@@ -64,6 +64,10 @@
             <option value="huge">Huge</option>
             {{/select}}
           </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Recovery</label>
+          <input type="text" name="system.recovery" value="{{system.recovery}}" data-dtype="Number" />
         </div>
       </div>
       <div class="grid grid-4col">

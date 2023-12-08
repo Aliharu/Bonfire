@@ -2,8 +2,21 @@
     <div class="sheet-body bonfire">
         <label class="resource-label">Roll</label>
         <div>
-            <input name="object.formula" value="{{data.formula}}" type="text" data-dtype="Number" />
+            <input name="object.formula" value="{{data.formula}}" type="text"/>
         </div>
+
+        {{#ifEquals data.rollType 'damage' }}
+        <div class="grid grid-2col">
+            <div>
+                <label class="resource-label">DR</label>
+                <input name="object.damageReduction" value="{{data.damageReduction}}" type="text" data-dtype="Number" />
+            </div>
+            <div>
+                <label class="resource-label">DR/d</label>
+                <input name="object.diceDamageReduction" value="{{data.diceDamageReduction}}" type="text" data-dtype="Number" />
+            </div>
+        </div>
+        {{/ifEquals}}
 
         <div style="display:flex;">
             <button type="button" id="roll-button">Roll</button>

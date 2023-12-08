@@ -176,7 +176,6 @@ export class BonfireActor extends Actor {
   _prepareAttacks(actorData) {
     const systemData = actorData.system;
 
-
     var combatStatMods = {
       attack: 0,
       defense: 0,
@@ -227,8 +226,7 @@ export class BonfireActor extends Actor {
       let attackBonus = combatStatMods.attack + weapon.system.attack + weapon.system.characterBonuses.attack + systemData.attack.value;
       let damageBonus = weapon.system.characterBonuses.damage + systemData.damage.value;
 
-      let recoveryBonus = combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.recovery + weapon.system.characterBonuses.recovery + systemData.recovery.value;
-      let recovery = weapon.system.recovery - recoveryBonus;
+      let recoveryBonus = combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.characterBonuses.recovery + systemData.recovery.value;
       let defense = systemData.defense.value + combatStatMods.defense + systemData.defense.value;
       let parry = 0
       let dr = systemData.dr.value;
@@ -251,7 +249,7 @@ export class BonfireActor extends Actor {
       if (actorData.type === 'character') {
         attackBonus += systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value;
         damageBonus += Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.damage.value / 2);
-        recoveryBonus += Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value / 2);
+        recoveryBonus -= Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value / 2);
         if (weapon.system.skillSuite !== 'ranged') {
           parry += (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0);
         }
@@ -277,7 +275,7 @@ export class BonfireActor extends Actor {
       else {
         damageFormula = `${damageFormula}+${damageBonus + statDamage}`
       }
-      recovery = Math.max(recovery, weapon.system.minRecovery);
+      let recovery = Math.max(weapon.system.recovery + recoveryBonus, weapon.system.minRecovery);
       attacks.push(
         {
           id: attacks.length,

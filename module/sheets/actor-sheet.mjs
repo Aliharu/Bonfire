@@ -26,7 +26,7 @@ export class BonfireActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
@@ -49,6 +49,11 @@ export class BonfireActorSheet extends ActorSheet {
     // Prepare NPC data and items.
     if (actorData.type == 'npc') {
       this._prepareItems(context);
+    }
+
+    context.itemDescriptions = {};
+    for (let item of this.actor.items) {
+      context.itemDescriptions[item.id] = await TextEditor.enrichHTML(item.system.description, { async: true, secrets: this.actor.isOwner, relativeTo: item });
     }
 
     // Add roll data for TinyMCE editors.
@@ -86,10 +91,11 @@ export class BonfireActorSheet extends ActorSheet {
     const gear = [];
     const weapons = [];
     const skills = [];
-    const features = [];
+    const wounds = [];
     const burdens = [];
     const expenditures = [];
     const rudiments = [];
+    const contacts = [];
     const characteristics = {
       devotions: [],
       descriptions: [],
@@ -114,11 +120,17 @@ export class BonfireActorSheet extends ActorSheet {
       if (i.type === 'burden') {
         burdens.push(i);
       }
+      if (i.type === 'wound') {
+        wounds.push(i);
+      }
       if (i.type === 'expenditure') {
         expenditures.push(i);
       }
       if (i.type === 'rudiment') {
         rudiments.push(i);
+      }
+      if (i.type === 'contact') {
+        contacts.push(i);
       }
       if (i.type === 'characteristic') {
         switch (i.system.type) {
@@ -130,9 +142,6 @@ export class BonfireActorSheet extends ActorSheet {
             break;
           case 'conviction':
             characteristics['convictions'].push(i);
-            break;
-          case 'contact':
-            characteristics['contacts'].push(i);
             break;
           case 'reputation':
             characteristics['reputations'].push(i);
@@ -148,7 +157,9 @@ export class BonfireActorSheet extends ActorSheet {
     context.gear = gear;
     context.weapons = weapons;
     context.characteristics = characteristics;
+    context.contacts = contacts;
     context.skills = skills;
+    context.wounds = wounds;
     context.burdens = burdens;
     context.expenditures = expenditures;
     context.rudiments = rudiments;
@@ -175,6 +186,11 @@ export class BonfireActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
       if (item) return item.attack();
+    });
+
+    html.find('.item-row').click(ev => {
+      const li = $(ev.currentTarget).next();
+      li.toggle("fast");
     });
 
     // Add Inventory Item

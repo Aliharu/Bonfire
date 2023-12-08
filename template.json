@@ -389,7 +389,8 @@
       "skill",
       "weapon",
       "expenditure",
-      "rudiment"
+      "rudiment",
+      "wound"
     ],
     "templates": {
       "base": {
@@ -432,6 +433,20 @@
       ],
       "type": "description",
       "value": 0
+    },
+    "contact": {
+      "templates": [
+        "base"
+      ],
+      "knowledge": 1,
+      "organization": 1
+    },
+    "wound": {
+      "templates": [
+        "base"
+      ],
+      "amount": 0,
+      "toHeal": 0
     },
     "burden": {
       "templates": [
