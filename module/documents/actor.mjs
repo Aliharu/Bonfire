@@ -231,7 +231,7 @@ export class BonfireActor extends Actor {
       let parry = 0
       let dr = systemData.dr.value;
       let diceDR = systemData.diceDr.value;
-      let parryDR = '2/d';
+      let parryDR = `2/d`;
       let name = weapon.name;
       let measure = weapon.system.measure;
       let damageFormula = weapon.system.damageFormula;
@@ -252,6 +252,8 @@ export class BonfireActor extends Actor {
         recoveryBonus -= Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value / 2);
         if (weapon.system.skillSuite !== 'ranged') {
           parry += (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0);
+          parryDR = `${parryDR}+${Math.floor((systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0) / 3)}`
+
         }
         if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
           parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
