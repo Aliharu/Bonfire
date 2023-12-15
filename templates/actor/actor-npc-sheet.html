@@ -141,7 +141,11 @@
                 <th>Defenses</th>
               </tr>
               <tr>
+                {{#ifEquals attack.skillSuite 'ranged'}}
+                <td><span style="font-style:bold;">R.I: </span>{{ attack.rangeIncrement }}</td>
+                {{else}}
                 <td><span style="font-style:bold;">Meas: </span>{{ attack.measure }}</td>
+                {{/ifEquals}}
                 <td><span style="font-style:bold;">Def: </span>{{ attack.defense }}</td>
               </tr>
               <tr>
@@ -241,6 +245,23 @@
           <input type="text" name="system.defense.value" value="{{system.defense.value}}" data-dtype="Number" />
         </div>
         <div class="flex-group-center">
+          <div class="resource-label">Trauma</div>
+          <input type="text" name="system.traumaThreshhold.value" value="{{system.traumaThreshhold.value}}"
+            data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Measure</div>
+          <input type="text" name="system.measure.value" value="{{system.measure.value}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Parry DR</div>
+          <input type="text" name="system.parryDr" value="{{system.parryDr}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
+          <div class="resource-label">Parry DR/d</div>
+          <input type="text" name="system.parryDiceDr" value="{{system.parryDiceDr}}" data-dtype="Number" />
+        </div>
+        <div class="flex-group-center">
           <div class="resource-label">DR</div>
           <input type="text" name="system.dr.value" value="{{system.dr.value}}" data-dtype="Number" />
         </div>
@@ -255,15 +276,6 @@
         <div class="flex-group-center">
           <div class="resource-label">Cover</div>
           <input type="text" name="system.cover.value" value="{{system.cover.value}}" data-dtype="Number" />
-        </div>
-        <div class="flex-group-center">
-          <div class="resource-label">Trauma</div>
-          <input type="text" name="system.traumaThreshhold.value" value="{{system.traumaThreshhold.value}}"
-            data-dtype="Number" />
-        </div>
-        <div class="flex-group-center">
-          <div class="resource-label">Measure</div>
-          <input type="text" name="system.measure.value" value="{{system.measure.value}}" data-dtype="Number" />
         </div>
       </div>
       <div class="grid grid-5col">

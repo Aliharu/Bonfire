@@ -45,6 +45,32 @@ export class BonfireActor extends Actor {
     const systemData = actorData.system;
     systemData.vitality.value = systemData.vitality.max - systemData.vitality.damage;
     systemData.stress.value = systemData.stress.max - systemData.stress.damage;
+
+    if (systemData.vitality.damage > 0) {
+      systemData.vitality.status = 'Hurt';
+    }
+    if (systemData.vitality.damage > Math.ceil(systemData.vitality.max / 4)) {
+      systemData.vitality.status = 'Bloodied';
+    }
+    if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 2)) {
+      systemData.vitality.status = 'Wounded';
+    }
+    if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 3)) {
+      systemData.vitality.status = 'Critical';
+    }
+
+    if (systemData.stress.damage > 0) {
+      systemData.stress.status = 'Unsure';
+    }
+    if (systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
+      systemData.stress.status = 'Tense';
+    }
+    if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
+      systemData.stress.status = 'Shaken';
+    }
+    if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 3)) {
+      systemData.stress.status = 'Breaking';
+    }
   }
 
   /**
@@ -74,52 +100,26 @@ export class BonfireActor extends Actor {
       else {
         attribute.mod = 0;
       }
+    }
 
-      if (systemData.integrity.value <= 5) {
-        systemData.gritDice.dice = `N/A`;
+    if (systemData.integrity.value <= 5) {
+      systemData.gritDice.dice = `N/A`;
+    }
+    else {
+      var gridDiceVal = 4;
+      if (systemData.integrity.value > 10) {
+        gridDiceVal = 6;
       }
-      else {
-        var gridDiceVal = 4;
-        if (systemData.integrity.value > 10) {
-          gridDiceVal = 6;
-        }
-        if (systemData.integrity.value > 15) {
-          gridDiceVal = 8;
-        }
-        if (systemData.integrity.value > 20) {
-          gridDiceVal = 10;
-        }
-        if (systemData.race.toLowerCase() === 'human') {
-          gridDiceVal += 2;
-        }
-        systemData.gritDice.dice = `D${gridDiceVal}`;
+      if (systemData.integrity.value > 15) {
+        gridDiceVal = 8;
       }
-
-      if (systemData.vitality.damage > 0) {
-        systemData.vitality.status = 'Hurt';
+      if (systemData.integrity.value > 20) {
+        gridDiceVal = 10;
       }
-      if (systemData.vitality.damage > Math.ceil(systemData.vitality.max / 4)) {
-        systemData.vitality.status = 'Bloodied';
+      if (systemData.race.toLowerCase() === 'human') {
+        gridDiceVal += 2;
       }
-      if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 2)) {
-        systemData.vitality.status = 'Wounded';
-      }
-      if (systemData.vitality.damage > Math.floor((systemData.vitality.max / 4) * 3)) {
-        systemData.vitality.status = 'Critical';
-      }
-
-      if (systemData.stress.damage > 0) {
-        systemData.stress.status = 'Unsure';
-      }
-      if (systemData.stress.damage > Math.ceil(systemData.stress.max / 4)) {
-        systemData.stress.status = 'Tense';
-      }
-      if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 2)) {
-        systemData.stress.status = 'Shaken';
-      }
-      if (systemData.stress.damage > Math.floor((systemData.stress.max / 4) * 3)) {
-        systemData.stress.status = 'Breaking';
-      }
+      systemData.gritDice.dice = `D${gridDiceVal}`;
     }
 
     // Loop through attribute scores, and add their modifiers to our sheet output.
@@ -227,7 +227,8 @@ export class BonfireActor extends Actor {
       let damageBonus = weapon.system.characterBonuses.damage + systemData.damage.value;
 
       let recoveryBonus = combatStatMods.recovery * stengthRecoverySizes[weapon.system.size] + weapon.system.characterBonuses.recovery + systemData.recovery.value;
-      let defense = systemData.defense.value + combatStatMods.defense + systemData.defense.value;
+      let defense = systemData.defense.value + combatStatMods.defense;
+      let rangeIncrement = weapon.system.rangeIncrement;
       let parry = 0
       let dr = systemData.dr.value;
       let diceDR = systemData.diceDr.value;
@@ -245,6 +246,10 @@ export class BonfireActor extends Actor {
         statDamage = combatStatMods.damage;
         parry = weapon.system.baseParry + weapon.system.characterBonuses.parry + systemData.parry.value;
       }
+      else {
+        parry = '0'; 
+        parryDR = '0'; 
+      }
 
       if (actorData.type === 'character') {
         attackBonus += systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value;
@@ -253,7 +258,6 @@ export class BonfireActor extends Actor {
         if (weapon.system.skillSuite !== 'ranged') {
           parry += (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0);
           parryDR = `${parryDR}+${Math.floor((systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0) / 3)}`
-
         }
         if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
           parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
@@ -266,6 +270,9 @@ export class BonfireActor extends Actor {
           diceDR += systemData.armor.diceDr;
           initiative += systemData.armor.penalties.initiative.total;
         }
+      }
+      else {
+        parryDR = `${systemData.parryDiceDr}/d+${systemData.parryDr}`;
       }
 
       if (weapon.system.damageType === 'piercing') {
@@ -288,7 +295,8 @@ export class BonfireActor extends Actor {
           damageType: weapon.system.damageType.charAt(0).toUpperCase(),
           recovery: recovery,
           initiative: initiative,
-
+          skillSuite: weapon.system.skillSuite,
+          rangeIncrement: rangeIncrement,
           defense: defense,
           defenseFormula: `1d20x+${defense}`,
           flanks: flanks,

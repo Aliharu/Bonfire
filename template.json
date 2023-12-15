@@ -376,7 +376,9 @@
       ],
       "caution": {
         "value": 0
-      }
+      },
+      "parryDr": 0,
+      "parryDiceDr": 2
     }
   },
   "Item": {
@@ -478,6 +480,8 @@
       "attack": 0,
       "damage": 0,
       "recovery": 0,
+      "defense": 0,
+      "rangeIncrement": 0,
       "parry": 0,
       "measure": 0,
       "baseParry": 0,
