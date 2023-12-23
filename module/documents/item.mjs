@@ -23,27 +23,28 @@ export class BonfireItem extends Item {
     const itemData = this;
     const systemData = itemData.system;
 
-    if(itemData.type === 'item') {
+    if (itemData.type === 'item') {
       systemData.fullCost = {
         source: systemData.cost.source,
         local: systemData.cost.local,
         nearby: systemData.cost.nearby,
         distant: systemData.cost.distant,
       }
-      for(var i = 0; i < systemData.quality; i++) {
+      for (var i = 0; i < systemData.quality; i++) {
         systemData.fullCost.source = systemData.fullCost.source + (50 + (i * 10));
-        systemData.fullCost.local = systemData.fullCost.local + (50 + (i * 10));
-        systemData.fullCost.nearby = systemData.fullCost.nearby + (50 + (i * 10));
-        systemData.fullCost.distant = systemData.fullCost.distant + (50 + (i * 10));
+        systemData.fullCost.local = systemData.fullCost.local + ((50 + (i * 10)) * 2);
+        systemData.fullCost.nearby = systemData.fullCost.nearby + ((50 + (i * 10)) * 3);
+        systemData.fullCost.distant = systemData.fullCost.distant + ((50 + (i * 10)) * 4);
       }
       systemData.fullCost.source = systemData.fullCost.source.toFixed(2);
       systemData.fullCost.local = systemData.fullCost.local.toFixed(2);
       systemData.fullCost.nearby = systemData.fullCost.nearby.toFixed(2);
       systemData.fullCost.distant = systemData.fullCost.distant.toFixed(2);
+      systemData.weightString = `${systemData.weight.value}${systemData.weight?.type?.charAt(0).toUpperCase() || ''}`
     }
-    if(itemData.type === 'skill') {
+    if (itemData.type === 'skill') {
       systemData.cost = (systemData.ranks * 3) + systemData.baseCost;
-      if(this.actor) {
+      if (this.actor) {
         systemData.cost -= this.actor.system.skillAdepts;
       }
     }
@@ -125,8 +126,11 @@ export class BonfireItem extends Item {
     if (type === 'rudiment') {
       return "systems/bonfire/assets/icons/magic-swirl.svg";
     }
-    if (type === 'weapon') {
+    if (type === 'weapon' || type === 'attack') {
       return "icons/svg/sword.svg";
+    }
+    if (type === 'movement') {
+      return "icons/svg/wing.svg"
     }
     return "icons/svg/item-bag.svg";
   }

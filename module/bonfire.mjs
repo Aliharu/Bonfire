@@ -8,6 +8,8 @@ import { BonfireItemSheet } from "./sheets/item-sheet.mjs";
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { BONFIRE } from "./helpers/config.mjs";
 import { BonfireDie } from "./dice/dice.mjs";
+import Importer from "./apps/importer.js";
+
 import { BonfireCombat } from "./combat.js";
 import { RollForm } from "./apps/dice-roller.js";
 
@@ -87,6 +89,15 @@ Handlebars.registerHelper("enrichedHTMLItems", function (sheetData, type, itemID
 Hooks.once("ready", async function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
+});
+
+Hooks.on("renderActorDirectory", (app, html, data) => {
+  const button = $(`<button class="json-importer"><i class="fas fa-suitcase"></i>Import</button>`);
+  html.find(".directory-footer").append(button);
+
+  button.click(ev => {
+    game.importer = new Importer().render(true);
+  })
 });
 
 /* -------------------------------------------- */

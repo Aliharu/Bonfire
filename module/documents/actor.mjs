@@ -38,7 +38,6 @@ export class BonfireActor extends Actor {
     this._prepareActorData(actorData);
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
-    this._prepareAttacks(actorData);
   }
 
   _prepareActorData(actorData) {
@@ -164,6 +163,87 @@ export class BonfireActor extends Actor {
 
     systemData.crp.toLevel = totalCRPRequired - systemData.crp.spent;
     systemData.crp.totalExpenditure = actorData.items.filter(item => item.type === 'expenditure').reduce((sum, obj) => sum + obj.system.amount, 0);
+
+    const weightChart = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      10: 9,
+      11: 9,
+      12: 11,
+      13: 13,
+      14: 15,
+      15: 17,
+      16: 19,
+      17: 27,
+      18: 30,
+      19: 33,
+      20: 36,
+      21: 39,
+      22: 42,
+      23: 45,
+    }
+
+    var STRWeight = weightChart[systemData.attributes.str.value] || 0;
+    if (systemData.race.toLowerCase() === 'ratfolk') {
+      STRWeight *= 5;
+    }
+    STRWeight += (systemData.weightBonus.small + (systemData.weightBonus.medium * 3) + (systemData.weightBonus.large * 9))
+
+    const smallToMediumRatio = 3;
+    const mediumToLargeRatio = 3;
+
+    // Calculate the number of medium weights
+    const mediumWeight = Math.floor(STRWeight / smallToMediumRatio);
+
+    // Calculate the remaining small weights after removing the medium weights
+    const remainingSmallWeight = STRWeight % smallToMediumRatio;
+
+    // Calculate the number of large weights
+    const largeWeight = Math.floor(mediumWeight / mediumToLargeRatio);
+
+    // Calculate the remaining medium weights after removing the large weights
+    const remainingMediumWeight = mediumWeight % mediumToLargeRatio;
+
+    systemData.totalItemWeightAllowance = `${remainingSmallWeight}S, ${remainingMediumWeight}M, ${largeWeight}L`;
+
+    const weightUsed = {
+      "tiny": 0,
+      "small": 0,
+      "medium": 0,
+      "large": 0,
+      "huge": 0,
+    };
+
+    for (const item of actorData.items.filter(item => item.type === 'item')) {
+      if (weightUsed[item.system.weight.type] !== undefined) {
+        weightUsed[item.system.weight.type] += item.system.weight.value;
+      }
+    }
+    if (weightUsed.tiny > 2) {
+      weightUsed.small += Math.floor(weightUsed.tiny / 3);
+      weightUsed.tiny = weightUsed.tiny % 3;
+    }
+    if (weightUsed.small > 2) {
+      weightUsed.medium += Math.floor(weightUsed.small / 3);
+      weightUsed.small = weightUsed.small % 3;
+    }
+    if (weightUsed.medium > 2) {
+      weightUsed.large += Math.floor(weightUsed.medium / 3);
+      weightUsed.medium = weightUsed.medium % 3;
+    }
+    if (weightUsed.huge > 0) {
+      weightUsed.large += weightUsed.huge * 3;
+    }
+    systemData.totalItemWeight = `${weightUsed.small}S, ${weightUsed.medium}M, ${weightUsed.large}L`;
+    this._prepareAttacks(actorData);
   }
 
   /**
@@ -171,6 +251,36 @@ export class BonfireActor extends Actor {
    */
   _prepareNpcData(actorData) {
     if (actorData.type !== 'npc') return;
+
+    this._prepareNpcAttacks(actorData);
+  }
+
+  _prepareNpcAttacks(actorData) {
+    const systemData = actorData.system;
+    var attacks = [];
+    for (const attack of actorData.items.filter(item => item.type === 'attack')) {
+      attacks.push(
+        {
+          id: attacks.length,
+          name: attack.name,
+          measure: attack.system.measure,
+          attack: `1d20x+${attack.system.attack}`,
+          damage: attack.system.damageFormula,
+          damageType: attack.system.damageType.charAt(0).toUpperCase(),
+          recovery: attack.system.recovery,
+          initiative: attack.system.initiative,
+          rangeIncrement: attack.system.rangeIncrement,
+          defense: attack.system.defense,
+          defenseFormula: `1d20x+${attack.system.defense}`,
+          flanks: attack.system.flanks,
+          parry: attack.system.parry,
+          cover: `${attack.system.cover} ${`(${attack.system.fullCover})`}`,
+          parryDR: `${attack.system.parryDiceDr ? `${attack.system.parryDiceDr}/d+${attack.system.parryDr}` : attack.system.parryDr}`,
+          DR: `${attack.system.diceDr ? `${attack.system.diceDr}/d+${attack.system.dr}` : attack.system.dr}`,
+        }
+      );
+    }
+    systemData.attacks = attacks;
   }
 
   _prepareAttacks(actorData) {
@@ -184,13 +294,11 @@ export class BonfireActor extends Actor {
       recovery: 0
     }
 
-    if (actorData.type === 'character') {
-      combatStatMods.attack = CONFIG.BONFIRE.combatStatMods.dexAtk[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.intAtk[systemData.attributes.int.value];
-      combatStatMods.defense = CONFIG.BONFIRE.combatStatMods.dexDef[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willDef[systemData.attributes.will.value];
-      combatStatMods.initiative = CONFIG.BONFIRE.combatStatMods.dexInit[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willInit[systemData.attributes.will.value];
-      combatStatMods.damage = CONFIG.BONFIRE.combatStatMods.strDam[systemData.attributes.str.value];
-      combatStatMods.recovery = CONFIG.BONFIRE.combatStatMods.strRec[systemData.attributes.str.value];
-    }
+    combatStatMods.attack = CONFIG.BONFIRE.combatStatMods.dexAtk[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.intAtk[systemData.attributes.int.value];
+    combatStatMods.defense = CONFIG.BONFIRE.combatStatMods.dexDef[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willDef[systemData.attributes.will.value];
+    combatStatMods.initiative = CONFIG.BONFIRE.combatStatMods.dexInit[systemData.attributes.dex.value] + CONFIG.BONFIRE.combatStatMods.willInit[systemData.attributes.will.value];
+    combatStatMods.damage = CONFIG.BONFIRE.combatStatMods.strDam[systemData.attributes.str.value];
+    combatStatMods.recovery = CONFIG.BONFIRE.combatStatMods.strRec[systemData.attributes.str.value];
 
     systemData.combatStatMods = combatStatMods;
 
@@ -240,39 +348,52 @@ export class BonfireActor extends Actor {
       let statDamage = 0;
       let flanks = systemData.flanks.value;
       let cover = systemData.cover.value;
+      let fullCover = 0;
 
-      if (weapon.system.skillSuite !== 'ranged') {
+      let attackTypeSuite = weapon.system.attackType;
+
+      if(attackTypeSuite === 'thrown') {
+        attackTypeSuite = 'ranged';
+      }
+
+      if(weapon.system.attackType === 'thrown') {
+        statDamage = combatStatMods.damage;
+        parry = weapon.system.baseParry + weapon.system.characterBonuses.parry + systemData.parry.value;
+      }
+      else if (weapon.system.attackType !== 'ranged') {
         measure += systemData.measure.value;
         statDamage = combatStatMods.damage;
         parry = weapon.system.baseParry + weapon.system.characterBonuses.parry + systemData.parry.value;
       }
       else {
-        parry = '0'; 
-        parryDR = '0'; 
+        parry = '0';
+        parryDR = '0';
       }
 
-      if (actorData.type === 'character') {
-        attackBonus += systemData.combatSkills[weapon.system.skillSuite].advancedCombatSkills.attack.value;
-        damageBonus += Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.damage.value / 2);
-        recoveryBonus -= Math.ceil(systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.recovery.value / 2);
-        if (weapon.system.skillSuite !== 'ranged') {
-          parry += (systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0);
-          parryDR = `${parryDR}+${Math.floor((systemData.combatSkills[weapon.system.skillSuite]?.advancedCombatSkills.parry.value || 0) / 3)}`
+      attackBonus += systemData.combatSkills[attackTypeSuite].advancedCombatSkills.attack.value;
+      damageBonus += Math.ceil(systemData.combatSkills[attackTypeSuite]?.advancedCombatSkills.damage.value / 2);
+      recoveryBonus -= Math.ceil(systemData.combatSkills[attackTypeSuite]?.advancedCombatSkills.recovery.value / 2);
+      if (weapon.system.attackType !== 'ranged') {
+        if(weapon.system.attackType === 'thrown') {
+          parry += (systemData.combatSkills.melee.advancedCombatSkills.parry.value || 0);
+          parryDR = `${parryDR}+${Math.floor((systemData.combatSkills.melee.advancedCombatSkills.parry.value || 0) / 3)}`;
         }
-        if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
-          parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
-          name = `${name} & ${systemData.shield.name}`;
-          flanks += systemData.shield.flanks;
-          cover += systemData.shield.cover;
-        }
-        if (systemData.armor.equipped) {
-          dr += systemData.armor.dr;
-          diceDR += systemData.armor.diceDr;
-          initiative += systemData.armor.penalties.initiative.total;
+        else {
+          parry += (systemData.combatSkills[attackTypeSuite]?.advancedCombatSkills.parry.value || 0);
+          parryDR = `${parryDR}+${Math.floor((systemData.combatSkills[attackTypeSuite]?.advancedCombatSkills.parry.value || 0) / 3)}`;
         }
       }
-      else {
-        parryDR = `${systemData.parryDiceDr}/d+${systemData.parryDr}`;
+      if (systemData.shield.equipped && (weapon.system.size === 'small' || weapon.system.size === 'medium')) {
+        parryDR = `${systemData.shield.diceDr}/d+${systemData.shield.dr}`;
+        name = `${name} & ${systemData.shield.name}`;
+        flanks += systemData.shield.flanks;
+        cover += systemData.shield.cover;
+        fullCover = systemData.shield.fullCover;
+      }
+      if (systemData.armor.equipped) {
+        dr += systemData.armor.dr;
+        diceDR += systemData.armor.diceDr;
+        initiative += systemData.armor.penalties.initiative.total;
       }
 
       if (weapon.system.damageType === 'piercing') {
@@ -295,13 +416,13 @@ export class BonfireActor extends Actor {
           damageType: weapon.system.damageType.charAt(0).toUpperCase(),
           recovery: recovery,
           initiative: initiative,
-          skillSuite: weapon.system.skillSuite,
+          attackType: weapon.system.attackType,
           rangeIncrement: rangeIncrement,
           defense: defense,
           defenseFormula: `1d20x+${defense}`,
           flanks: flanks,
           parry: parry,
-          cover: cover,
+          cover: `${cover}(${fullCover})`,
           parryDR: parryDR,
           DR: `${diceDR}/d+${dr}`,
         }

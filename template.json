@@ -60,6 +60,9 @@
           "run": 15,
           "sprint": 20
         },
+        "knockback": {
+          "value": 0
+        },
         "biography": ""
       }
     },
@@ -341,6 +344,7 @@
         "defensePenalty": 0,
         "size": "small",
         "cover": 0,
+        "fullCover": 0,
         "flanks": 0,
         "fatigue": {
           "base": 0,
@@ -365,6 +369,11 @@
         "gold": 0,
         "platinum": 0
       },
+      "weightBonus": {
+        "small": 0,
+        "medium": 0,
+        "large": 0
+      },
       "settings": {
         "primary": "expert",
         "secondary": "expert"
@@ -377,8 +386,7 @@
       "caution": {
         "value": 0
       },
-      "parryDr": 0,
-      "parryDiceDr": 2
+      "combatNotes": ""
     }
   },
   "Item": {
@@ -392,7 +400,9 @@
       "weapon",
       "expenditure",
       "rudiment",
-      "wound"
+      "wound",
+      "attack",
+      "movement"
     ],
     "templates": {
       "base": {
@@ -434,7 +444,8 @@
         "base"
       ],
       "type": "description",
-      "value": 0
+      "value": 0,
+      "formula": "1d20x"
     },
     "contact": {
       "templates": [
@@ -457,6 +468,13 @@
       "crp": 0,
       "rank": 0
     },
+    "movement": {
+      "crawl": 2.5,
+      "walk": 5,
+      "jog": 10,
+      "run": 15,
+      "sprint": 20
+    },
     "expenditure": {
       "amount": 0
     },
@@ -473,7 +491,7 @@
       "formula": "1d20x",
       "damageFormula": "1d12x",
       "damageType": "piercing",
-      "skillSuite": "melee",
+      "attackType": "melee",
       "size": "small",
       "maxRange": 0,
       "minRecovery": 0,
@@ -493,6 +511,33 @@
         "parry": 0,
         "damage": 0
       }
+    },
+    "attack": {
+      "templates": [
+        "base",
+        "item"
+      ],
+      "equipped": true,
+      "formula": "1d20x",
+      "damageFormula": "1d12x",
+      "damageType": "piercing",
+      "attackType": "melee",
+      "size": "small",
+      "attack": 0,
+      "recovery": 0,
+      "defense": 0,
+      "rangeIncrement": 0,
+      "parry": 0,
+      "measure": 0,
+      "baseParry": 0,
+      "cover": 0,
+      "fullCover": "0",
+      "dr": 0,
+      "diceDr": 0,
+      "parryDr": 0,
+      "parryDiceDr": 0,
+      "bonus": "",
+      "traits": ""
     }
   }
 }

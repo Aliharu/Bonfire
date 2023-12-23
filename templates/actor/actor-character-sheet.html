@@ -169,11 +169,11 @@
                 <th>Defenses</th>
               </tr>
               <tr>
-                {{#ifEquals attack.skillSuite 'ranged'}}
+                {{#if attack.rangeIncrement}}
                 <td><span style="font-style:bold;">R.I: </span>{{ attack.rangeIncrement }}</td>
                 {{else}}
                 <td><span style="font-style:bold;">Meas: </span>{{ attack.measure }}</td>
-                {{/ifEquals}}
+                {{/if}}
                 <td><span style="font-style:bold;">Def: </span>{{ attack.defense }}</td>
               </tr>
               <tr>
@@ -483,8 +483,8 @@
           <div class="item-formula">Knowledge</div>
           <div class="item-formula">Organization</div>
           <div class="item-controls">
-            <a class="item-control item-create" title="Create contact" data-type="contact"><i
-                class="fas fa-plus"></i> Add</a>
+            <a class="item-control item-create" title="Create contact" data-type="contact"><i class="fas fa-plus"></i>
+              Add</a>
           </div>
         </li>
         {{#each contacts as |item id|}}
@@ -681,7 +681,7 @@
             {{/if}}
           </div>
           <input type="text" name="system.shield.name" value="{{system.shield.name}}" />
-          <div class="grid grid-5col">
+          <div class="grid grid-6col">
             <div class="resource-label">
               DR
             </div>
@@ -695,6 +695,9 @@
               Cover
             </div>
             <div class="resource-label">
+              F.Cover
+            </div>
+            <div class="resource-label">
               Flanks
             </div>
             <input type="text" name="system.shield.dr" value="{{system.shield.dr}}" data-dtype="Number" />
@@ -702,6 +705,7 @@
             <input type="text" name="system.shield.defensePenalty" value="{{system.shield.defensePenalty}}"
               data-dtype="Number" />
             <input type="text" name="system.shield.cover" value="{{system.shield.cover}}" data-dtype="Number" />
+            <input type="text" name="system.shield.fullCover" value="{{system.shield.fullCover}}" />
             <input type="text" name="system.shield.flanks" value="{{system.shield.flanks}}" data-dtype="Number" />
           </div>
           <div class="grid grid-4col">
@@ -788,9 +792,36 @@
           </div>
         </div>
         <div class="resource flex-group-center">
-          <label for="system.size.value" class="resource-label">Size</label>
+          <label for="system.size" class="resource-label">Size</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.size.value" value="{{system.size.value}}" />
+            <input type="text" name="system.size" value="{{system.size}}" />
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <div class="resource-label">Knockback</div>
+          <div class="flex-group-center">
+            <input type="text" name="system.knockback.value" value="{{system.knockback.value}}" data-dtype="Number" />
+          </div>
+        </div>
+      </div>
+      <div class="item d-flex flex-between mb-1 resource" style="text-align: center;">
+        <div class="resource-label">
+          Weight Bonus
+        </div>
+      </div>
+      <div>
+        <div class="grid grid-4col">
+          <div class="resource flex-group-center">
+            <div class="resource-label">Small</div>
+            <input type="text" name="system.weightBonus.small" value="{{system.weightBonus.small}}" data-dtype="Number" />
+          </div>
+          <div class="resource flex-group-center">
+            <div class="resource-label">Medium</div>
+            <input type="text" name="system.weightBonus.medium" value="{{system.weightBonus.medium}}" data-dtype="Number" />
+          </div>
+          <div class="resource flex-group-center">
+            <div class="resource-label">Large</div>
+            <input type="text" name="system.weightBonus.large" value="{{system.weightBonus.large}}" data-dtype="Number" />
           </div>
         </div>
       </div>

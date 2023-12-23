@@ -89,6 +89,7 @@ export class BonfireActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
+    const attacks = [];
     const weapons = [];
     const skills = [];
     const wounds = [];
@@ -96,12 +97,14 @@ export class BonfireActorSheet extends ActorSheet {
     const expenditures = [];
     const rudiments = [];
     const contacts = [];
+    const movements = [];
     const characteristics = {
       devotions: [],
       descriptions: [],
       convictions: [],
       reputations: [],
       contacts: [],
+      flaws: [],
     };
 
     // Iterate through items, allocating to containers
@@ -110,6 +113,9 @@ export class BonfireActorSheet extends ActorSheet {
       // Append to gear.
       if (i.type === 'item') {
         gear.push(i);
+      }
+      if (i.type === 'attack') {
+        attacks.push(i);
       }
       if (i.type === 'weapon') {
         weapons.push(i);
@@ -131,6 +137,9 @@ export class BonfireActorSheet extends ActorSheet {
       }
       if (i.type === 'contact') {
         contacts.push(i);
+      }
+      if (i.type === 'movement') {
+        movements.push(i);
       }
       if (i.type === 'characteristic') {
         switch (i.system.type) {
@@ -155,6 +164,7 @@ export class BonfireActorSheet extends ActorSheet {
 
     // Assign and return
     context.gear = gear;
+    context.attacks = attacks;
     context.weapons = weapons;
     context.characteristics = characteristics;
     context.contacts = contacts;
@@ -163,6 +173,7 @@ export class BonfireActorSheet extends ActorSheet {
     context.burdens = burdens;
     context.expenditures = expenditures;
     context.rudiments = rudiments;
+    context.movements = movements;
   }
 
   /* -------------------------------------------- */

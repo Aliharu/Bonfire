@@ -50,7 +50,6 @@
             {{#select system.attackType}}
             <option value="melee">Melee</option>
             <option value="ranged">Ranged</option>
-            <option value="thrown">Thrown</option>
             <option value="unarmed">Unarmed</option>
             {{/select}}
           </select>
@@ -77,14 +76,6 @@
           <input type="text" name="system.measure" value="{{system.measure}}" data-dtype="Number" />
         </div>
         <div class="resource">
-          <label class="resource-label">Max Range</label>
-          <input type="text" name="system.maxRange" value="{{system.maxRange}}" data-dtype="Number" />
-        </div>
-        <div class="resource">
-          <label class="resource-label">Min Recovery</label>
-          <input type="text" name="system.minRecovery" value="{{system.minRecovery}}" data-dtype="Number" />
-        </div>
-        <div class="resource">
           <label class="resource-label">Base Parry</label>
           <input type="text" name="system.baseParry" value="{{system.baseParry}}" data-dtype="Number" />
         </div>
@@ -92,33 +83,46 @@
           <label class="resource-label">Range Increment</label>
           <input type="text" name="system.rangeIncrement" value="{{system.rangeIncrement}}" data-dtype="Number" />
         </div>
-      </div>
-      <div>
         <div class="resource">
-          <label class="resource-label">Misc Bonuses (Skill bonuses are calculated automatically)</label>
-        </div>
-      </div>
-      <div class="grid grid-4col">
-        <div class="resource">
-          <label class="resource-label">Attack</label>
-          <input type="text" name="system.characterBonuses.attack" value="{{system.characterBonuses.attack}}" data-dtype="Number" />
+          <label class="resource-label">Initiative</label>
+          <input type="text" name="system.initiative" value="{{system.initiative}}" data-dtype="Number" />
         </div>
         <div class="resource">
-          <label class="resource-label">Damage</label>
-          <input type="text" name="system.characterBonuses.damage" value="{{system.characterBonuses.damage}}" data-dtype="Number" />
-        </div>
-        <div class="resource">
-          <label class="resource-label">Recovery</label>
-          <input type="text" name="system.characterBonuses.recovery" value="{{system.characterBonuses.recovery}}" data-dtype="Number" />
+          <label class="resource-label">Defense</label>
+          <input type="text" name="system.defense" value="{{system.defense}}" data-dtype="Number" />
         </div>
         <div class="resource">
           <label class="resource-label">Parry</label>
-          <input type="text" name="system.characterBonuses.parry" value="{{system.characterBonuses.parry}}" data-dtype="Number" />
+          <input type="text" name="system.parry" value="{{system.parry}}" data-dtype="Number" />
         </div>
-      </div>
-      <div class="resource">
-        <label class="resource-label">Bonus</label>
-        <textarea type="text" name="system.bonus" rows="4">{{system.bonus}}</textarea>
+        <div class="resource">
+          <label class="resource-label">Flanks</label>
+          <input type="text" name="system.flanks" value="{{system.flanks}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Cover</label>
+          <input type="text" name="system.cover" value="{{system.cover}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Full Cover</label>
+          <input type="text" name="system.fullCover" value="{{system.fullCover}}" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Parry DR</label>
+          <input type="text" name="system.parryDr" value="{{system.parryDr}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Parry Dice DR</label>
+          <input type="text" name="system.parryDiceDr" value="{{system.parryDiceDr}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">DR</label>
+          <input type="text" name="system.dr" value="{{system.dr}}" data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Dice DR</label>
+          <input type="text" name="system.diceDr" value="{{system.diceDr}}" data-dtype="Number" />
+        </div>
       </div>
       <div class="resource">
         <label class="resource-label">Traits</label>
