@@ -38,7 +38,7 @@ export default class Importer extends FormApplication {
             };
             if (!npcJson.combat.physical.notrauma) {
                 actorTemplate.system.traumaThreshhold = {
-                    value: Math.ceil(npcJson.combat.physical.fatigue / 2),
+                    value: npcJson.combat.physical.rollundertrauma,
                 };
             }
             if (!npcJson.combat.physical.noknockback) {

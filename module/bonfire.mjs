@@ -92,7 +92,7 @@ Hooks.once("ready", async function() {
 });
 
 Hooks.on("renderActorDirectory", (app, html, data) => {
-  const button = $(`<button class="json-importer"><i class="fas fa-suitcase"></i>Import</button>`);
+  const button = $(`<button class="json-importer"><i class="fas fa-user"></i>Import</button>`);
   html.find(".directory-footer").append(button);
 
   button.click(ev => {
