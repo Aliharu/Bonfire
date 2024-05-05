@@ -7,14 +7,7 @@
         <div class="resource">
           <div class="resource-label">Type</div>
           <select name="system.type" data-type="String">
-            {{#select system.type}}
-            <option value="devotion">Devotion</option>
-            <option value="description">Description</option>
-            <option value="conviction">Conviction</option>
-            <option value="contact">Contact</option>
-            <option value="reputation">Reputation</option>
-            <option value="flaw">Flaw</option>
-            {{/select}}
+            {{selectOptions selects.characteristicTypes selected=system.type localize=false}}
           </select>
         </div>
         <div class="resource">

@@ -312,22 +312,22 @@ export class BonfireActor extends Actor {
     };
     const minRecovery = {
       'crushing': {
+        'small': 5,
+        'medium': 6,
+        'large': 7,
+        'huge': 7
+      },
+      'piercing': {
+        'small': 3,
+        'medium': 3,
+        'large': 3,
+        'huge': 3
+      },
+      'slashing': {
         'small': 4,
         'medium': 5,
         'large': 6,
         'huge': 6
-      },
-      'piercing': {
-        'small': 2,
-        'medium': 2,
-        'large': 2,
-        'huge': 2
-      },
-      'slashing': {
-        'small': 3,
-        'medium': 3,
-        'large': 3,
-        'huge': 4
       },
     };
     for (const weapon of actorData.items.filter(item => item.type === 'weapon' && item.system.equipped)) {

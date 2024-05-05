@@ -9,7 +9,7 @@ export class BonfireActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["bonfire", "sheet", "actor"],
       template: "systems/bonfire/templates/actor/actor-sheet.html",
       width: 880,
@@ -61,6 +61,7 @@ export class BonfireActorSheet extends ActorSheet {
 
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
+    context.selects = CONFIG.BONFIRE.selects;
 
     return context;
   }
@@ -438,7 +439,7 @@ export class BonfireActorSheet extends ActorSheet {
     // Get the type of item to create.
     const type = header.dataset.type;
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    const data = foundry.utils.duplicate(header.dataset); 
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.

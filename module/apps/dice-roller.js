@@ -18,7 +18,7 @@ export class RollForm extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["dialog"],
             popOut: true,
             template: "systems/bonfire/templates/dialogues/dialog-roll.html",
@@ -48,7 +48,7 @@ export class RollForm extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        mergeObject(this, formData);
+        foundry.utils.mergeObject(this, formData);
     }
 
     activateListeners(html) {
@@ -66,7 +66,7 @@ export class RollForm extends FormApplication {
 
     async _roll() {
         let label = this.object.rollType.charAt(0).toUpperCase() + this.object.rollType.slice(1);
-        let roll = new Roll(this.object.formula, this.actor.getRollData()).evaluate({ async: false });
+        let roll = await new Roll(this.object.formula, this.actor.getRollData()).evaluate();
         roll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: label,

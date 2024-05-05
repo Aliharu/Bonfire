@@ -45,13 +45,7 @@
         <div class="flexrow">
           <input type="text" name="system.weight.value" value="{{system.weight.value}}" data-dtype="Number" />
           <select name="system.weight.type" data-type="String">
-            {{#select system.weight.type}}
-            <option value="">None</option>
-            <option value="tiny">Tiny</option>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-            {{/select}}
+            {{selectOptions selects.weights selected=system.weight.type localize=false blank=""}}
           </select>
         </div>
       </div>

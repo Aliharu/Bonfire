@@ -7,18 +7,7 @@
         <div class="resource">
           <div class="resource-label">Type</div>
           <select name="system.type" data-type="String">
-            {{#select system.type}}
-            <option value="shape">Shape</option>
-            <option value="origin">Origin</option>
-            <option value="animism">Animism</option>
-            <option value="calling">Calling</option>
-            <option value="charm">Charm</option>
-            <option value="glamour">Glamour</option>
-            <option value="investiture">Investiture</option>
-            <option value="occultism">Occultism</option>
-            <option value="sortilege">Sortilege</option>
-            <option value="">None</option>
-            {{/select}}
+            {{selectOptions selects.schools selected=system.type localize=false blank=""}}
           </select>
         </div>
         <div class="resource">

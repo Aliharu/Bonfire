@@ -6,7 +6,7 @@ export class BonfireItemSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["bonfire", "sheet", "item"],
       width: 520,
       height: 480,
@@ -45,6 +45,7 @@ export class BonfireItemSheet extends ItemSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = itemData.system;
     context.flags = itemData.flags;
+    context.selects = CONFIG.BONFIRE.selects;
 
     return context;
   }

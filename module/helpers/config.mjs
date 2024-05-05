@@ -22,6 +22,55 @@ BONFIRE.attirbuteAbbreviations = {
     "pre": "BONFIRE.AttributePreAbbr"
 };
 
+BONFIRE.selects = {
+    damageTypes: {
+        "crushing": "Crushing",
+        "piercing": "Piercing",
+        "slashing": "Slashing"
+    },
+    attackTypes: {
+        "melee": "Melee",
+        "ranged": "Ranged",
+        "unarmed": "Unarmed"
+    },
+    attackTypesCharacter: {
+        "melee": "Melee",
+        "ranged": "Ranged",
+        "thrown": "Thrown",
+        "unarmed": "Unarmed"
+    },
+    sizes: {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "huge": "Huge"
+    },
+    characteristicTypes: {
+        "devotion": "Devotion",
+        "description": "Description",
+        "conviction": "Conviction",
+        "reputation": "Reputation",
+        "flaw": "Flaw"
+    },
+    weights: {
+        "tiny": "Tiny",
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+    },
+    schools: {
+        "shape": "Shape",
+        "origin": "Origin",
+        "animism": "Animism",
+        "calling": "Calling",
+        "charm": "Charm",
+        "glamour": "Glamour",
+        "investiture": "Investiture",
+        "occultism": "Occultism",
+        "sortilege": "Sortilege"
+    }
+}
+
 BONFIRE.combatStatMods = {
     "dexAtk": {
         0: 0,
