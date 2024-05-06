@@ -13,6 +13,13 @@ import Importer from "./apps/importer.js";
 import { BonfireCombat } from "./combat.js";
 import { RollForm } from "./apps/dice-roller.js";
 
+import { CharacterData, NpcData } from "./template/actor-template.js";
+import { ItemBurdenData, ItemSkillData, ItemWeaponData, 
+  ItemCharacteristicData, ItemContactData, 
+  ItemData, ItemExpenditureData, 
+  ItemRudimentData, ItemWoundData, ItemAttackData, 
+  ItemMovementData } from "./template/item-template.js";
+
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
@@ -27,6 +34,25 @@ Hooks.once('init', async function() {
     rollItemMacro,
     RollForm
   };
+
+  CONFIG.Actor.dataModels = {
+    character: CharacterData,
+    npc: NpcData
+  }
+
+  CONFIG.Item.dataModels = {
+    burden: ItemBurdenData,
+    characteristic: ItemCharacteristicData,
+    contact: ItemContactData,
+    item: ItemData,
+    skill: ItemSkillData,
+    weapon: ItemWeaponData,
+    expenditure: ItemExpenditureData,
+    rudiment: ItemRudimentData,
+    wound: ItemWoundData,
+    attack: ItemAttackData,
+    movement: ItemMovementData,
+  }
 
   // Add custom constants for configuration.
   CONFIG.BONFIRE = BONFIRE;

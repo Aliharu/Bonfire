@@ -6,8 +6,6 @@
  export const preloadHandlebarsTemplates = async function() {
   return loadTemplates([
 
-    // Actor partials.
-    "systems/bonfire/templates/actor/parts/actor-features.html",
     "systems/bonfire/templates/actor/parts/actor-items.html",
     "systems/bonfire/templates/actor/parts/actor-effects.html",
   ]);

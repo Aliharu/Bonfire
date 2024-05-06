@@ -61,8 +61,7 @@
   {{!-- Sheet Body --}}
   <section class="sheet-body">
 
-    {{!-- Owned Features Tab --}}
-    <div class="tab features" data-group="primary" data-tab="skills">
+    <div class="tab skills" data-group="primary" data-tab="skills">
       <section class="grid grid-4col">
         <aside class="sidebar">
 
@@ -81,7 +80,6 @@
           </div>
         </aside>
 
-        {{!-- For the main features list, span the right two columns --}}
         <section class="main grid-span-3">
           <ol class="items-list">
             <li class="item flexrow items-header">
@@ -778,12 +776,12 @@
           <input type="text" name="system.race" value="{{system.race}}" />
         </div>
         <div class="resource flex-group-center">
-          <div class="resource-label">Primary</div>
-          <input type="text" name="system.archtype.primary" value="{{system.archtype.primary}}" />
+          <div class="resource-label">Class</div>
+          <input type="text" name="system.class.main" value="{{system.class.main}}" />
         </div>
         <div class="resource flex-group-center">
-          <div class="resource-label">Secondary</div>
-          <input type="text" name="system.archtype.secondary" value="{{system.archtype.secondary}}" />
+          <div class="resource-label">Subclass</div>
+          <input type="text" name="system.class.sub" value="{{system.class.sub}}" />
         </div>
         <div class="resource flex-group-center">
           <label for="system.level.value" class="resource-label">Level</label>

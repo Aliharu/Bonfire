@@ -14,7 +14,7 @@ export class BonfireActorSheet extends ActorSheet {
       template: "systems/bonfire/templates/actor/actor-sheet.html",
       width: 880,
       height: 880,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
   }
 
