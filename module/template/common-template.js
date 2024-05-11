@@ -33,7 +33,7 @@ export function advancedSkillField(label, baseCost) {
 export function skillSuiteField(name) {
     return new fields.SchemaField({
         value: new fields.NumberField({ initial: 0 }),
-        name: new fields.StringField({ initial: name }),
+        label: new fields.StringField({ initial: name }),
         trained: new fields.BooleanField({ initial: false }),
     });
 }
