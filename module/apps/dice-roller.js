@@ -4,13 +4,13 @@ export class RollForm extends FormApplication {
         this.actor = actor;
         this.object.rollType = data.dialogType;
         if (this.object.rollType === 'attack') {
-            this.object.formula = this.actor.system.attacks[data.index].attack;
+            this.object.formula = this.actor.attacks[data.index].attack;
         }
         if (this.object.rollType === 'damage') {
-            this.object.formula = this.actor.system.attacks[data.index].damage;
+            this.object.formula = this.actor.attacks[data.index].damage;
         }
         if (this.object.rollType === 'defense') {
-            this.object.formula = this.actor.system.attacks[data.index].defenseFormula;
+            this.object.formula = this.actor.attacks[data.index].defenseFormula;
         }
         this.object.damageReduction = 0;
         this.object.diceDamageReduction = 0;

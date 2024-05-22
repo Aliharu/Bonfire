@@ -10,6 +10,9 @@ class CommonItemData extends foundry.abstract.TypeDataModel {
             pagenum: new fields.StringField({ initial: "" }),
         }
     }
+    toPlainObject() {
+        return { ...this };
+    }
 }
 
 export class ItemData extends CommonItemData {
@@ -155,7 +158,7 @@ export class ItemWeaponData extends CommonItemData {
                 distant: new fields.NumberField({ initial: 0 }),
             }),
             formula: new fields.StringField({ initial: "d20x" }),
-            equipped: new fields.BooleanField({ initial: false }),
+            equipped: new fields.BooleanField({ initial: true }),
             damageFormula: new fields.StringField({ initial: "1d12x" }),
             damageType: new fields.StringField({ initial: "piercing" }),
             attackType: new fields.StringField({ initial: "melee" }),

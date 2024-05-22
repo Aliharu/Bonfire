@@ -34,11 +34,28 @@ export class BonfireActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = this.actor.toObject(false);
+    const actorData = this.document.toPlainObject();
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = actorData.system;
+    context.attacks = actorData.attacks;
     context.flags = actorData.flags;
+
+    // Enrich biography info for display
+    // Enrichment turns text like `[[/r 1d20]]` into buttons
+    context.enrichedBiography = await TextEditor.enrichHTML(
+      this.actor.system.biography,
+      {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: this.actor.getRollData(),
+        // Relative UUID resolution
+        relativeTo: this.actor,
+      }
+    );
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
@@ -165,7 +182,9 @@ export class BonfireActorSheet extends ActorSheet {
 
     // Assign and return
     context.gear = gear;
-    context.attacks = attacks;
+    if(context.type === 'npc') {
+      context.attacks = attacks;
+    }
     context.weapons = weapons;
     context.characteristics = characteristics;
     context.contacts = contacts;

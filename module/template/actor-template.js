@@ -69,6 +69,10 @@ class CommonActorData extends foundry.abstract.TypeDataModel {
       }),
     }
   }
+
+  toPlainObject() {
+    return {...this};
+  }
 }
 
 export class CharacterData extends CommonActorData {

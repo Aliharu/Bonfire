@@ -57,7 +57,7 @@ export class BonfireItem extends Item {
   getRollData() {
     // If present, return the actor's roll data.
     if (!this.actor) return null;
-    const rollData = this.actor.getRollData();
+    const rollData = { ...this.system };
     // Grab the item's system data as well.
     rollData.item = foundry.utils.deepClone(this.system);
 
@@ -102,6 +102,27 @@ export class BonfireItem extends Item {
       });
       return roll;
     }
+  }
+
+  /**
+ * Convert the actor document to a plain object.
+ * 
+ * The built in `toObject()` method will ignore derived data when using Data Models.
+ * This additional method will instead use the spread operator to return a simplified
+ * version of the data.
+ * 
+ * @returns {object} Plain object either via deepClone or the spread operator.
+ */
+  toPlainObject() {
+    const result = { ...this };
+
+    // Simplify system data.
+    result.system = this.system.toPlainObject();
+
+    // Add effects.
+    result.effects = this.effects?.size > 0 ? this.effects.contents : [];
+
+    return result;
   }
 
   getImageUrl(type) {
