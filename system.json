@@ -29,8 +29,10 @@
       "thumbnail": "systems/bonfire/assets/logo.png"
     }
   ],
-  "gridDistance": 5,
-  "gridUnits": "ft",
+  "grid":{
+    "distance":5,
+    "units":"ft"
+  },
   "primaryTokenAttribute": "vitality",
   "secondaryTokenAttribute": "stress",
   "url": "https://raw.githubusercontent.com/Aliharu/bonfire",
